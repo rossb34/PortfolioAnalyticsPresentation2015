@@ -306,7 +306,11 @@ Many thanks to...
 ---
 
 ## PortfolioAnalytics Links
-PortfolioAnalytics is on R-Forge in the ReturnAnalytics project
+PortfolioAnalytics on CRAN
+
+* [PortfolioAnalytics](http://cran.at.r-project.org/web/packages/PortfolioAnalytics/index.html)
+
+PortfolioAnalytics development on R-Forge in the ReturnAnalytics project
 
 * [PortfolioAnalytics](https://r-forge.r-project.org/projects/returnanalytics/)
 
