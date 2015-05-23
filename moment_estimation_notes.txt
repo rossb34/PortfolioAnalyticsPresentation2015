@@ -1,0 +1,112 @@
+Moment Estimation Notes
+
+http://corporate.morningstar.com/ib/documents/MethodologyDocuments/IBBAssociates/BlackLitterman.pdf
+The most important input in mean-variance optimization is the vector of
+expected returns; however, Best and Grauer (1991) demonstrate that a small
+increase in the expected return of one of the portfolio's assets can force
+half of the assets from the portfolio. In a search for a reasonable starting
+point for expected returns, Black and Litterman (1992), He and Litterman
+(1999), and Litterman (2003) explore several alternative forecasts: historical
+returns, equal “mean” returns for all assets, and risk- adjusted equal mean
+returns. They demonstrate that these alternative forecasts lead to extreme
+portfolios – when unconstrained, portfolios with large long and short
+positions; and, when subject to a long only constraint, portfolios that are
+concentrated in a relatively small number of assets.
+
+The Black-Litterman Model in Detail, Jay Walters, CFA
+
+The canonical Black-Litterman model makes two significant contributions to the
+problem of asset allocation. First, it provides an intuitive prior, the
+equilibrium market portfolio, as a starting point for estimation of asset
+returns. Second, the Black-Litterman model provides a clear way to specify
+investors views on returns and to blend the investors views with prior
+information. The investor's views are allowed to be partial or complete, and
+the views can span arbitrary and overlapping sets of assets.
+
+The Black- Litterman model provides a quantitative framework for specifying
+the investor's views, and a clear way to combine those investor's views with an
+intuitive prior to arrive at a new combined distribution.
+
+Ledoit and Wolf
+Since the seminal work of Markowitz (1952), mean-variance optimization has been
+the most rigorous way to pick stocks in which to invest. The two fundamental
+ingredients are the expected (excess) return for each stock, which represents
+the portfolio manager’s ability to forecast future price movements, and the
+covariance matrix of stock returns, which represents risk control.
+
+To put it as simply as possible, when the number of stocks under consideration
+is large, especially relative to the number of historical return observations
+available (which is the usual case), the sample covariance matrix is estimated
+with a lot of error.
+
+The crux of the method is that those estimated coefficients in the sample
+covariance matrix that are extremely high tend to contain a lot of positive
+error and therefore need to be pulled downwards to compensate for that.
+Similarly, we compensate for the negative error that tends to be embedded
+inside extremely low estimated coefficients by pulling them upwards. We call
+this the shrinkage of the extremes towards the center. If properly implemented,
+this shrinkage would clearly fix the problem of the sample covariance matrix
+described above. The key questions are towards what target to shrink, and how
+intensely?
+
+Strictly speaking, a matrix is "positive definite" if all of its eigenvalues are
+positive. Eigenvalues are the elements of a vector, e, which results from the
+decomposition of a square matrix S as: S = e'Me
+
+Wikipedia
+Sample covariance matrices are extremely sensitive to outliers
+
+The estimation of a covariance matrix is unstable unless the number of
+historical observations T is greater than the number of securities N (5000 in
+your example). Consider that 10 years of data represents only 120 monthly
+observations and about 2500 daily observations.
+
+Depending on the application, using data dating farther back than 10 years may
+be impractical and undesirable for many reasons -- de-listed stocks, regime
+changes, etc. In fact, risk management applications often require covariance
+estimations over recent periods of time (1-3 years).
+
+Factor Models
+Estimating the covariance matrix based on a factor model is a bias-versus-
+variance trade-off
+sample covariance matrix is unbiased but may have significant estimation error
+estimating the covariance matrix via a factor model may be biased but also may
+significantly reduce estimation error by significantly reducing the number of
+estimates
+
+Sample covariance matrix for n-assets
+n(n + 1)/2 estimations
+
+Covariance matrix with n-assets and a factor model with p-factors
+np+n+p^2 estimations
+
+
+One approach is to estimate the risk contributions by replacing the expectation
+in with the sample counterpart evaluated using historical or simulated
+data
+
+from boudt.pdf
+The important caveat is that portfolio moments need to be estimated, and that
+the estimation error greatly amplifies when the dimension of the investment
+universe increases. Already for moderately large dimensions, this curse of
+dimensionality makes the unrestricted estimators of the first four (co)moments
+almost useless. Suppose e.g. that we have a universe of 20 assets, then the
+number of unique elements in the covariance, coskewness and cokurtosis is 210,
+1540 and 8555, respectively. This is clearly an excessive number of parameters
+compared to the number of observations that are available in realistic
+applications.
+
+N assets
+dimension | number of elements to estimate
+covariance matrix: N x N   | N * (N + 1) / 2
+coskewness matrix: N x N^2 | N * (N + 1) * (N + 2) / 6
+cokurtosis matrix: N x N^3 | N * (N + 1) * (N + 2)(N + 3) / 24
+
+Factor model with K factors
+covariance matrix: N * (K + 1) + K * (K + 1) / 2
+coskewness matrix: N * (K + 1) + K * (K + 1) * (K + 2) / 6
+cokurtosis matrix: N * (K + 2) + K * (K + 1) / 2 + K * (K + 1) * (K + 2) * (K + 3) / 24
+
+
+
+
