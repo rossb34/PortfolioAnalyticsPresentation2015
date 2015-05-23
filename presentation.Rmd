@@ -98,6 +98,30 @@ The key points to make here are:
 
 ---
 
+## New in PortfolioAnalytics?
+
+* Pushed to CRAN
+* Regime Switching Framework
+* Multilayer Optimization
+* Rank Based Optimization
+* Factor Model Moment Estimates
+* Improved Random Portfolios Algorithm
+* More demos, vignettes, and documentation
+
+---
+
+## Regime Switching Framework
+
+TODO: Regime Switching Framework Visual
+
+---
+
+## Multilayer Optimization
+
+TODO: Multilayer Optimization Visual
+
+---
+
 ## Support Multiple Solvers
 Linear and Quadratic Programming Solvers
 
@@ -245,37 +269,158 @@ chart.Weights |
 Brief explanation of each function.
 -->
 
----
-
-## What's New in PortfolioAnalytics
-
-* Pushed to CRAN
-* Regime Switching Framework
-* Multilayer Optimization
-* Rank Based Optimization
-* Factor Model Moment Estimates
-* More demos, vignettes, and documentation
 
 ---
 
-## Regime Switching Framework
+## Portfolio Optimization
 
-Regime Switching Framework
+TODO: Insert Picture
 
----
+* Inputs
+  * Assets
+  * Constraints
+  * Objectives
+  * Moments of asset returns
 
-## Multilayer Optimization
+<!--
+High level portfolio optimization framework
 
-Multilayer Optimization
+Inputs
+  * Assets
+  * Constraints
+  * Objectives
+  * Moments of asset returns
+
+The assets, constraints, and objectives are defined by the portfolio manager.
+In general, these are fixed and there is no estimation or uncertainty. However,
+the moments of the asset returns must be estimated. The objectives defined in
+the portfolio optimization problem determine which moments and comoments must
+be estimated. Moments of the asset returns are key inputs to the optimization.
+
+Beware! Optimizers are error maximizers
+Bad Estimates --> Bad Results
+Better Estimates --> Better Results
+GIGO (Garbage In Garbage Out)
+
+Mean - Variance
+  * expected returns
+  * covariance matrix
+
+Minimum Variance
+  * covariance matrix
+
+Mean - Expected Shortfall (mean - ES)
+  * expected returns vector
+  * covariance matrix
+  * coskewness matrix
+  * cokurtosis matrix
+  
+If the returns are normally distributed, one can use the analytical formula for
+ES which only requires estimates of the first and second moments.
+
+The modified ES (based on Cornish-Fisher expansions) has been shown to deliver
+accurate estimates for portfolios with nonnormal returns
+
+For modified ES, one must estimate of the first four moments of the asset 
+returns.
+
+Minimum Expected Shortfall
+  * expected returns vector
+  * covariance matrix
+  * coskewness matrix
+  * cokurtosis matrix
+
+Same comments as above apply here. The moments to estimate depend on the choice
+of the risk measure, e.g. ES vs. modified ES.
+
+Expected Utility
+Here the moments to estimate are highly dependent on the choice of utility
+function. 
+
+Quadratic Utility
+  * expected returns vector
+  * covariance matrix
+
+Fourth order expansion of the Constant Relative Risk Aversion (CRRA) Utility Function
+Martellini and Ziemann (2010) and Boudt et al (2014)
+  * expected returns vector (assume zero mean and omit)
+  * covariance matrix
+  * coskewness matrix
+  * cokurtosis matrix
+
+-->
 
 ---
 
 ## Estimating Moments
 
-* sample
-* shrinkage
-* factor model
-* views
+Ledoit and Wolf (2003):
+
+> The central message of this paper is that nobody should be using the sample
+> covariance matrix for the purpose of portfolio optimization.
+
+
+* Sample
+* Shrinkage Estimators
+* Factor Model
+* Expressing Views
+
+<!--
+From Ledoit and Wolf (2003), "Honey, I Shrunk the Sample Covariance Matrix"
+The central message of this paper is that nobody should be using the sample 
+covariance matrix for the purpose of portfolio optimization.
+
+Estimating moments using shrinkage estimators, factor models, views are methods
+to address the disadvantages of using sample estimates. I am not making a claim
+that one method is better than another. The method chosen depends on one's own
+situation and information/data available.
+
+Increase risk of estimation error as dimension of assets and parameters to
+estimate increase
+
+Sample Estimates Disadvantages
+  * Estimation error and the curse of dimensionality
+  * In the Mean - Variance framework, small changes in expected returns can 
+  lead to extreme portfolios (large long/short positions) in the unconstrained
+  case and concentrated (large positions in few assets) portfolios wth long
+  only constraint.
+  * Note that adding constraints have of the effect of lessening the impact of 
+  estimation error. TODO: reference? I remember Doug stating this
+
+The estimation of a covariance matrix is unstable unless the number of
+historical observations T is greater than the number of assets N. 
+10 years of data
+daily: 2500
+weekly: 520
+monthly: 120
+
+One has the choice to estimate moments with historical or simulated data.
+
+Historical Data
+  * do you have enough data?
+  * missing assets
+  * is it clean?
+
+Simulated data
+  * Model risk
+  * How well does the model describe the data?
+
+* Shrinkage Estimators
+  * Ledoit-Wolf
+  * James-Stein
+* Factor Model
+  * Fundamental
+  * Statistical
+  * other
+* Expressing Views
+  * Black - Litterman
+  * Almgren and Chriss, Portfolios from Sorts
+  * Meucci, Fully Flexible Views Framework
+* Other
+  * Resampling
+  * ?
+
+-->
 
 ---
 
@@ -301,6 +446,9 @@ Many thanks to...
 - Thank the GSoC mentors for offering help and guidance during the GSoC project and after as I continued to work on the PortfolioAnalytics package.
 - R/Finance Committee for the conference and the opportunity to talk about PortfolioAnalytics.
 - Google for funding the Google Summer of Code for PortfolioAnalytics and many other proposals for R
+
+Thank everyone for attending
+I hope they learned something and are motivated to use PortfolioAnalytics
 -->
 
 ---
