@@ -278,12 +278,6 @@ Brief explanation of each function.
 
 TODO: Insert Picture
 
-* Inputs
-  * Assets
-  * Constraints
-  * Objectives
-  * Moments of asset returns
-
 
 <!--
 
@@ -302,8 +296,8 @@ the portfolio optimization problem determine which moments and comoments must
 be estimated. Moments of the asset returns are key inputs to the optimization.
 
 Beware! Optimizers are error maximizers
-Bad Estimates --> Bad Results
-Better Estimates --> Better Results
+Bad Estimates  Bad Results
+Better Estimates  Better Results
 GIGO (Garbage In Garbage Out)
 
 Mean - Variance
@@ -369,8 +363,8 @@ Ledoit and Wolf (2003):
 * Factor Model
 * Expressing Views
 
-<!--
 
+<!--
 From Ledoit and Wolf (2003), "Honey, I Shrunk the Sample Covariance Matrix"
 The central message of this paper is that nobody should be using the sample 
 covariance matrix for the purpose of portfolio optimization.
@@ -416,7 +410,7 @@ Simulated data
 * Factor Model
   * Fundamental
   * Statistical
-  * other
+  * Boudt et al (2014) use factor model to estimate higher order comoments
 * Expressing Views
   * Black - Litterman
   * Almgren and Chriss, Portfolios from Sorts
