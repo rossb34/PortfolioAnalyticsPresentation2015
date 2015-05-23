@@ -98,7 +98,7 @@ The key points to make here are:
 
 ---
 
-## New in PortfolioAnalytics?
+## New in PortfolioAnalytics
 
 * Pushed to CRAN
 * Regime Switching Framework
@@ -114,11 +114,13 @@ The key points to make here are:
 
 TODO: Regime Switching Framework Visual
 
+
 ---
 
 ## Multilayer Optimization
 
 TODO: Multilayer Optimization Visual
+
 
 ---
 
@@ -282,7 +284,9 @@ TODO: Insert Picture
   * Objectives
   * Moments of asset returns
 
+
 <!--
+
 High level portfolio optimization framework
 
 Inputs
@@ -356,8 +360,8 @@ Martellini and Ziemann (2010) and Boudt et al (2014)
 
 Ledoit and Wolf (2003):
 
-> The central message of this paper is that nobody should be using the sample
-> covariance matrix for the purpose of portfolio optimization.
+> "The central message of this paper is that nobody should be using the sample
+> covariance matrix for the purpose of portfolio optimization."
 
 
 * Sample
@@ -366,6 +370,7 @@ Ledoit and Wolf (2003):
 * Expressing Views
 
 <!--
+
 From Ledoit and Wolf (2003), "Honey, I Shrunk the Sample Covariance Matrix"
 The central message of this paper is that nobody should be using the sample 
 covariance matrix for the purpose of portfolio optimization.
