@@ -95,6 +95,46 @@ The key points to make here are:
 
 ---
 
+## New in PortfolioAnalytics
+
+* Pushed to CRAN
+* Regime Switching Framework
+* Multilayer Optimization
+* Rank Based Optimization
+* Factor Model Moment Estimates
+* Improved Random Portfolios Algorithm
+* More demos, vignettes, and documentation
+
+<!--
+Highlight a few things about each point
+* Pushed to CRAN
+  * 2015-04-19
+* Regime Switching Framework
+  * very general framework to define 'n' portfolios for 'n' regimes
+  * useful for out of sample backtesting
+* Multilayer Optimization
+  * more on this in next slide
+* Rank Based Optimization
+  * examples
+* Factor Model Moment Estimates
+  * statistical factor model
+  * compute higher order moments based on the work of kris boudt
+* Improved Random Portfolios Algorithm
+  * support more constraints by construction
+  * more efficient for group constraints
+* More demos, vignettes, and documentation
+  * added vignette for custom moments and objectives
+  * demos for each new feature added last summer during GSoC 2014
+-->
+
+---
+
+## Multilayer Optimization
+![](mult_portf.png)
+
+
+---
+
 ## Support Multiple Solvers
 Linear and Quadratic Programming Solvers
 
@@ -292,37 +332,440 @@ chart.Weights |
 Brief explanation of each function.
 -->
 
----
-
-## What's New in PortfolioAnalytics
-
-* Pushed to CRAN
-* Regime Switching Framework
-* Multilayer Optimization
-* Rank Based Optimization
-* Factor Model Moment Estimates
-* More demos, vignettes, and documentation
 
 ---
 
-## Regime Switching Framework
+## Portfolio Optimization
 
-Regime Switching Framework
+![](opt_fig.png)
 
----
 
-## Multilayer Optimization
+<!--
 
-Multilayer Optimization
+High level portfolio optimization framework
+
+Inputs
+  * Assets
+  * Constraints
+  * Objectives
+  * Moments of asset returns
+
+The assets, constraints, and objectives are defined by the portfolio manager.
+In general, these are fixed and there is no estimation or uncertainty. However,
+the moments of the asset returns must be estimated. The objectives defined in
+the portfolio optimization problem determine which moments and comoments must
+be estimated. Moments of the asset returns are key inputs to the optimization.
+
+Beware! Optimizers are error maximizers
+Bad Estimates  Bad Results
+Better Estimates  Better Results
+GIGO (Garbage In Garbage Out)
+
+Mean - Variance
+  * expected returns
+  * covariance matrix
+
+Minimum Variance
+  * covariance matrix
+
+Mean - Expected Shortfall (mean - ES)
+  * expected returns vector
+  * covariance matrix
+  * coskewness matrix
+  * cokurtosis matrix
+  
+If the returns are normally distributed, one can use the analytical formula for
+ES which only requires estimates of the first and second moments.
+
+The modified ES (based on Cornish-Fisher expansions) has been shown to deliver
+accurate estimates for portfolios with nonnormal returns
+
+For modified ES, one must estimate of the first four moments of the asset 
+returns.
+
+Minimum Expected Shortfall
+  * expected returns vector
+  * covariance matrix
+  * coskewness matrix
+  * cokurtosis matrix
+
+Same comments as above apply here. The moments to estimate depend on the choice
+of the risk measure, e.g. ES vs. modified ES.
+
+Expected Utility
+Here the moments to estimate are highly dependent on the choice of utility
+function. 
+
+Quadratic Utility
+  * expected returns vector
+  * covariance matrix
+
+Fourth order expansion of the Constant Relative Risk Aversion (CRRA) Utility Function
+Martellini and Ziemann (2010) and Boudt et al (2014)
+  * expected returns vector (assume zero mean and omit)
+  * covariance matrix
+  * coskewness matrix
+  * cokurtosis matrix
+
+-->
 
 ---
 
 ## Estimating Moments
 
-* sample
-* shrinkage
-* factor model
-* views
+Ledoit and Wolf (2003):
+
+> "The central message of this paper is that nobody should be using the sample
+> covariance matrix for the purpose of portfolio optimization."
+
+
+* Sample
+* Shrinkage Estimators
+* Factor Model
+* Expressing Views
+
+
+<!--
+From Ledoit and Wolf (2003), "Honey, I Shrunk the Sample Covariance Matrix"
+The central message of this paper is that nobody should be using the sample 
+covariance matrix for the purpose of portfolio optimization.
+
+Estimating moments using shrinkage estimators, factor models, views are methods
+to address the disadvantages of using sample estimates. I am not making a claim
+that one method is better than another. The method chosen depends on one's own
+situation and information/data available.
+
+Increase risk of estimation error as dimension of assets and parameters to
+estimate increase
+
+Sample Estimates Disadvantages
+  * Estimation error and the curse of dimensionality
+  * In the Mean - Variance framework, small changes in expected returns can 
+  lead to extreme portfolios (large long/short positions) in the unconstrained
+  case and concentrated (large positions in few assets) portfolios wth long
+  only constraint.
+  * Note that adding constraints have of the effect of lessening the impact of 
+  estimation error. TODO: reference? I remember Doug stating this
+
+The estimation of a covariance matrix is unstable unless the number of
+historical observations T is greater than the number of assets N. 
+10 years of data
+daily: 2500
+weekly: 520
+monthly: 120
+
+One has the choice to estimate moments with historical or simulated data.
+
+Historical Data
+  * do you have enough data?
+  * missing assets
+  * is it clean?
+
+Simulated data
+  * Model risk
+  * How well does the model describe the data?
+
+* Shrinkage Estimators
+  * Ledoit-Wolf
+  * James-Stein
+* Factor Model
+  * Fundamental
+  * Statistical
+  * Boudt et al (2014) use factor model to estimate higher order comoments
+* Expressing Views
+  * Black - Litterman
+  * Almgren and Chriss, Portfolios from Sorts
+  * Meucci, Fully Flexible Views Framework
+* Other
+  * Resampling
+  * ?
+
+-->
+
+---
+
+## Meucci Fully Flexible Views
+
+* Reference Model
+$$ X \sim f_X $$
+
+* Views
+$$ V \equiv g (X) \sim f_V $$
+
+* Express View on Ranking
+$$ m \{ V_1 \} \geq  m \{ V_2 \} \geq ... \geq  m \{ V_K \} $$
+
+* Posterior
+$$ \tilde{f}_x \equiv \underset{f \in V}{\text{ argmin    }} { entropy(f, f_x) } $$
+
+<!--
+
+Key difference between BL and FFV
+The Black-Litterman approach allows the portfolio manager to express views
+on the expected returns vector. The model quantifies views and uncertainty
+of views.
+
+The Meucci FFV framework is more general and allows one to express views on the
+market. 
+
+From Meucci paper
+http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1213325
+
+To obtain the posterior, we interpret the views as statements that distort the
+prior distribution, in such a way that the least possible amount of spurious
+structure is imposed. The natural index for the structure of a distribution is
+its entropy. Therefore we define the posterior distribution as the one that
+minimizes the entropy relative to the prior. Then by opinion pooling we assign
+different confidence levels to different views and users.
+
+Reference Model
+We assume the existence of a risk model, i.e. a model for the joint
+distribution of the risk factors, as represented by its probability density
+function (pdf)
+X \dist f\_X
+
+Views
+In the most general case, the user expresses views on generic functions of the
+market g1 (X) , . . . , gK (X). These functions constitute a K -dimensional
+random variable whose joint distribution is implied by the reference model
+V = g (X) \dist f\_V
+
+views in general are statements on only select features of the distribution of V
+The generalized BL views are not necessarily expressed as equality constraint:
+EP can process views expressed as inequalities. In particular, EP can process
+ordering information, frequent in stock and bond management:
+
+m { V\_1 } >=  m { V\_2 } >= ... >= m { V\_K }
+
+The posterior
+The posterior distribution should satisfy the views without adding additional
+structure and should be as close as possible to the reference model
+
+The posterior market distribution is the one that minimizes the relative
+entropy
+
+perform entropy minimization to obtain posterior
+
+perform entropy minimization between a distribution f and the reference model f_x
+\tilde{f}\_x = argmin{ entropy(f, f\_x) } f \in V stands for all the 
+distributions consistent with the views statement
+
+Confidence
+Opinion Pooling
+\tilde{f}\_x^c = (1 - c) * f\_x + c * \tilde{f}\_x
+pooling parameter c in [0,1] represents the confidence levels in the views
+-->
+
+---
+
+## Almgren-Chriss Portfolios from Sorts
+
+* Define $ S_1, ... , S_n $ as the investment universe of $ n $ assets
+
+* Defining Sorts
+  * Single complete sort
+  $$ r_1 \geq r_2 \geq ... \geq r_n $$
+  * Sector based sort
+  * Deciles and Other Divisions
+  * Single complete sort with longs and shorts
+  * others
+
+* Centroid vector, $ c $, is defined as the center of mass of the set $ Q $.
+  * where $ Q $ is the space of consistent expected returns
+
+
+<!--
+
+The Black-Litterman approach allows the portfolio manager to express views
+on the expected returns vector. The model quantifies views and uncertainty
+of views.
+
+Portfolios from Sorts is a method for portfolio optimization based on replacing
+expected returns with information about the order of the expected returns.
+For a single complete sort we assume that each expected return direction is
+equally likely: there is no bias toward some directions over others. The only
+information in the model is the sort itself.
+
+From the paper
+We shall write S1, . . . , Sn for the available investment universe of n stocks.
+In its most general sense, a portfolio sort is a set of inequality relationships
+between the expected returns of these assets. The simplest and most common
+example is a single complete sort which orders all the assets of the portfolio
+by expected return from greatest to least.
+
+r\_1 >= r\_2 >= ... >= r\_n
+
+A sort is a set of beliefs about the first moments of the joint distribution of
+returns
+
+If we have a portfolio of stocks S1,...,Sn ordered so that r1 >= ··· >= rn then
+we are positing two things. First, the obvious, that the expected returns of the
+stocks, or more precisely, the joint distribution of the stocks, respect the
+ordering. Second, this information is the only information we have about the
+expected returns.
+
+the information in an expected return vector relevant for optimization is
+contained completely in its vector direction, not in its magnitude.
+
+centroid vector
+analytical approximation for a single complete sort
+monte carlo estimate for other estimates
+  * sector
+  * sign
+  * buckets
+
+-->
+
+---
+
+## Example
+
+```r
+# Load package and data.
+library(PortfolioAnalytics)
+data(edhec)
+R <- edhec[,1:4]
+funds <- colnames(R)
+
+# Construct initial portfolio with basic constraints.
+init.portf <- portfolio.spec(assets=funds)
+init.portf <- add.constraint(portfolio=init.portf, type="weight_sum", 
+                             min_sum=0.99, max_sum=1.01)
+init.portf <- add.constraint(portfolio=init.portf, type="box",
+                             min=0.05, max=0.5)
+init.portf <- add.objective(portfolio=init.portf, type="risk", name="StdDev")
+init.portf <- add.objective(portfolio=init.portf, type="return", name="mean")
+
+# Generate random portfolios for use in the optimization.
+rp <- random_portfolios(init.portf, 5000)
+```
+
+---
+
+## Example
+
+```r
+# Here we express views on the relative rank of the asset returns
+# E{ R[,2] < R[,3] < R[,1] < R[,4] }
+asset.rank <- c(2, 3, 1, 4)
+```
+
+### Meucci: Fully Flexible Views Framework
+
+```r
+p <- rep(1 / nrow(R), nrow(R))
+m.moments <- meucci.ranking(R, p, asset.rank)
+```
+
+### Almgren and Chriss: Portfolios from Sorts
+
+```r
+ac.moments <- list()
+ac.moments$mu <- ac.ranking(R, asset.rank)
+# Sample estimate for second moment
+ac.moments$sigma <- cov(R)
+```
+
+<!--
+meucci.ranking does the entropy minimization and computes the first and second
+moments given the market data and posterior probability.
+
+EntropyProg does the entropy minimization and returns the posterior probabilities
+
+meucci.moments computes the first and second moments given the market data and
+posterior probability
+
+ac.ranking computes the estimated centroid vector from a single complete sort
+using the analytical approximation as described in R. Almgren and N. Chriss,
+"Portfolios from Sorts". The centroid is estimated and then scaled such that it
+is on a scale similar to the asset returns. By default, the centroid vector is
+scaled according to the median of the asset mean returns.
+
+-->
+
+---
+
+## Example Optimization
+
+
+```r
+# Use moments output from meucci.ranking
+opt.meucci <- optimize.portfolio(R, 
+                                 init.portf, 
+                                 optimize_method="random", 
+                                 rp=rp, 
+                                 trace=TRUE,
+                                 momentargs=m.moments)
+
+# Use first moment from ac.ranking. Note second moment is sample covariance
+opt.ac <- optimize.portfolio(R, 
+                             init.portf, 
+                             optimize_method="random", 
+                             rp=rp, 
+                             trace=TRUE,
+                             momentargs=ac.moments)
+```
+
+
+---
+
+## Optimization Results
+TODO: Insert image for optimal weights
+
+---
+
+## Custom Moment Function
+
+```r
+moment.ranking <- function(R, n=1, method=c("meucci", "ac")){
+  method <- match.arg(method)
+  tmpR <- apply(tail(R, n), 2, function(x) prod(1 + x) - 1)
+  # Assume that the assets with the highest return will continue to outperform
+  asset.rank <- order(tmpR)
+  switch(method,
+         meucci = {
+           p <- rep(1 / nrow(R), nrow(R))
+           moments <- meucci.ranking(R, p, asset.rank)
+         },
+         ac = {
+           moments <- list()
+           moments$mu <- ac.ranking(R, asset.rank)
+           moments$sigma <- cov(R)
+         })
+  moments
+}
+```
+
+---
+
+## Optimization with Periodic Rebalancing
+
+
+```r
+opt.bt.meucci <- optimize.portfolio.rebalancing(R, init.portf, 
+                                                optimize_method="random", 
+                                                rebalance_on="quarters", 
+                                                training_period=100,
+                                                rp=rp,
+                                                momentFUN="moment.ranking",
+                                                n=3,
+                                                method="meucci")
+
+opt.bt.ac <- optimize.portfolio.rebalancing(R, init.portf, 
+                                            optimize_method="random", 
+                                            rebalance_on="quarters", 
+                                            training_period=100,
+                                            rp=rp,
+                                            momentFUN="moment.ranking",
+                                            n=3,
+                                            method="ac")
+```
+
+---
+
+## Optimization Results
+TODO: Insert performance summary chart and table of annualized returns
+
 
 ---
 
@@ -330,10 +773,10 @@ Multilayer Optimization
 
 * Introduced the goals and summary of PortfolioAnalytics
 * Demonstrated the flexibility through examples
-* Exciting plans for GSOC 2014
-    * Support for regime switching
-    * Support for supervised learning
-    * many more
+* Plans for continued development
+    * Interface to $parma$
+    * Additional solvers
+    * "Gallery" of examples
 
 #### Acknowledgements
 Many thanks to...
@@ -348,6 +791,9 @@ Many thanks to...
 - Thank the GSoC mentors for offering help and guidance during the GSoC project and after as I continued to work on the PortfolioAnalytics package.
 - R/Finance Committee for the conference and the opportunity to talk about PortfolioAnalytics.
 - Google for funding the Google Summer of Code for PortfolioAnalytics and many other proposals for R
+
+Thank everyone for attending
+I hope they learned something and are motivated to use PortfolioAnalytics
 -->
 
 ---

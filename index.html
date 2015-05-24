@@ -174,6 +174,58 @@ The key points to make here are:
 
 <slide class="" id="slide-5" style="background:;">
   <hgroup>
+    <h2>New in PortfolioAnalytics</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Pushed to CRAN</li>
+<li>Regime Switching Framework</li>
+<li>Multilayer Optimization</li>
+<li>Rank Based Optimization</li>
+<li>Factor Model Moment Estimates</li>
+<li>Improved Random Portfolios Algorithm</li>
+<li>More demos, vignettes, and documentation</li>
+</ul>
+
+<!--
+Highlight a few things about each point
+* Pushed to CRAN
+  * 2015-04-19
+* Regime Switching Framework
+  * very general framework to define 'n' portfolios for 'n' regimes
+  * useful for out of sample backtesting
+* Multilayer Optimization
+  * more on this in next slide
+* Rank Based Optimization
+  * examples
+* Factor Model Moment Estimates
+  * statistical factor model
+  * compute higher order moments based on the work of kris boudt
+* Improved Random Portfolios Algorithm
+  * support more constraints by construction
+  * more efficient for group constraints
+* More demos, vignettes, and documentation
+  * added vignette for custom moments and objectives
+  * demos for each new feature added last summer during GSoC 2014
+-->
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Multilayer Optimization</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="mult_portf.png" alt=""></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
     <h2>Support Multiple Solvers</h2>
   </hgroup>
   <article data-timings="">
@@ -206,7 +258,7 @@ Brief explanation of each solver and what optimization problems are supported
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-6" style="background:;">
+<slide class="" id="slide-8" style="background:;">
   <hgroup>
     <h2>Random Portfolios</h2>
   </hgroup>
@@ -233,7 +285,7 @@ Brief explanation of each solver and what optimization problems are supported
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-7" style="background:;">
+<slide class="" id="slide-9" style="background:;">
   <hgroup>
     <h2>Comparison of Random Portfolio Methods (Interactive!)</h2>
   </hgroup>
@@ -262,7 +314,7 @@ The feasible space is computed using the EDHEC data for a long only portfolio wi
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-8" style="background:;">
+<slide class="" id="slide-10" style="background:;">
   <hgroup>
     <h2>Random Portfolios: Simplex Method</h2>
   </hgroup>
@@ -277,7 +329,7 @@ FEV (Face-Edge-Vertex bias values control how concentrated a portfolio is. This 
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-9" style="background:;">
+<slide class="" id="slide-11" style="background:;">
   <hgroup>
     <h2>Workflow: Specify Portfolio</h2>
   </hgroup>
@@ -300,7 +352,7 @@ The portfolio object is an S3 object that holds portfolio-level data, constraint
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-10" style="background:;">
+<slide class="" id="slide-12" style="background:;">
   <hgroup>
     <h2>Workflow: Add Constraints</h2>
   </hgroup>
@@ -332,7 +384,7 @@ This adds a constraint object to the portfolio object. Constraints are added to 
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-11" style="background:;">
+<slide class="" id="slide-13" style="background:;">
   <hgroup>
     <h2>Workflow: Add Objectives</h2>
   </hgroup>
@@ -362,7 +414,7 @@ Objectives are added to the portfolio object with the add.objective function. Ea
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-12" style="background:;">
+<slide class="" id="slide-14" style="background:;">
   <hgroup>
     <h2>Workflow: Run Optimization</h2>
   </hgroup>
@@ -399,7 +451,7 @@ Objectives are added to the portfolio object with the add.objective function. Ea
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-13" style="background:;">
+<slide class="" id="slide-15" style="background:;">
   <hgroup>
     <h2>Workflow: Analyze Results</h2>
   </hgroup>
@@ -444,41 +496,81 @@ Brief explanation of each function.
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-14" style="background:;">
-  <hgroup>
-    <h2>What&#39;s New in PortfolioAnalytics</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>Pushed to CRAN</li>
-<li>Regime Switching Framework</li>
-<li>Multilayer Optimization</li>
-<li>Rank Based Optimization</li>
-<li>Factor Model Moment Estimates</li>
-<li>More demos, vignettes, and documentation</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-15" style="background:;">
-  <hgroup>
-    <h2>Regime Switching Framework</h2>
-  </hgroup>
-  <article data-timings="">
-    <p>Regime Switching Framework</p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
 <slide class="" id="slide-16" style="background:;">
   <hgroup>
-    <h2>Multilayer Optimization</h2>
+    <h2>Portfolio Optimization</h2>
   </hgroup>
   <article data-timings="">
-    <p>Multilayer Optimization</p>
+    <p><img src="opt_fig.png" alt=""></p>
+
+<!--
+
+High level portfolio optimization framework
+
+Inputs
+  * Assets
+  * Constraints
+  * Objectives
+  * Moments of asset returns
+
+The assets, constraints, and objectives are defined by the portfolio manager.
+In general, these are fixed and there is no estimation or uncertainty. However,
+the moments of the asset returns must be estimated. The objectives defined in
+the portfolio optimization problem determine which moments and comoments must
+be estimated. Moments of the asset returns are key inputs to the optimization.
+
+Beware! Optimizers are error maximizers
+Bad Estimates  Bad Results
+Better Estimates  Better Results
+GIGO (Garbage In Garbage Out)
+
+Mean - Variance
+  * expected returns
+  * covariance matrix
+
+Minimum Variance
+  * covariance matrix
+
+Mean - Expected Shortfall (mean - ES)
+  * expected returns vector
+  * covariance matrix
+  * coskewness matrix
+  * cokurtosis matrix
+  
+If the returns are normally distributed, one can use the analytical formula for
+ES which only requires estimates of the first and second moments.
+
+The modified ES (based on Cornish-Fisher expansions) has been shown to deliver
+accurate estimates for portfolios with nonnormal returns
+
+For modified ES, one must estimate of the first four moments of the asset 
+returns.
+
+Minimum Expected Shortfall
+  * expected returns vector
+  * covariance matrix
+  * coskewness matrix
+  * cokurtosis matrix
+
+Same comments as above apply here. The moments to estimate depend on the choice
+of the risk measure, e.g. ES vs. modified ES.
+
+Expected Utility
+Here the moments to estimate are highly dependent on the choice of utility
+function. 
+
+Quadratic Utility
+  * expected returns vector
+  * covariance matrix
+
+Fourth order expansion of the Constant Relative Risk Aversion (CRRA) Utility Function
+Martellini and Ziemann (2010) and Boudt et al (2014)
+  * expected returns vector (assume zero mean and omit)
+  * covariance matrix
+  * coskewness matrix
+  * cokurtosis matrix
+
+-->
 
   </article>
   <!-- Presenter Notes -->
@@ -489,12 +581,76 @@ Brief explanation of each function.
     <h2>Estimating Moments</h2>
   </hgroup>
   <article data-timings="">
-    <ul>
-<li>sample</li>
-<li>shrinkage</li>
-<li>factor model</li>
-<li>views</li>
+    <p>Ledoit and Wolf (2003):</p>
+
+<blockquote>
+<p>&quot;The central message of this paper is that nobody should be using the sample
+covariance matrix for the purpose of portfolio optimization.&quot;</p>
+</blockquote>
+
+<ul>
+<li>Sample</li>
+<li>Shrinkage Estimators</li>
+<li>Factor Model</li>
+<li>Expressing Views</li>
 </ul>
+
+<!--
+From Ledoit and Wolf (2003), "Honey, I Shrunk the Sample Covariance Matrix"
+The central message of this paper is that nobody should be using the sample 
+covariance matrix for the purpose of portfolio optimization.
+
+Estimating moments using shrinkage estimators, factor models, views are methods
+to address the disadvantages of using sample estimates. I am not making a claim
+that one method is better than another. The method chosen depends on one's own
+situation and information/data available.
+
+Increase risk of estimation error as dimension of assets and parameters to
+estimate increase
+
+Sample Estimates Disadvantages
+  * Estimation error and the curse of dimensionality
+  * In the Mean - Variance framework, small changes in expected returns can 
+  lead to extreme portfolios (large long/short positions) in the unconstrained
+  case and concentrated (large positions in few assets) portfolios wth long
+  only constraint.
+  * Note that adding constraints have of the effect of lessening the impact of 
+  estimation error. TODO: reference? I remember Doug stating this
+
+The estimation of a covariance matrix is unstable unless the number of
+historical observations T is greater than the number of assets N. 
+10 years of data
+daily: 2500
+weekly: 520
+monthly: 120
+
+One has the choice to estimate moments with historical or simulated data.
+
+Historical Data
+  * do you have enough data?
+  * missing assets
+  * is it clean?
+
+Simulated data
+  * Model risk
+  * How well does the model describe the data?
+
+* Shrinkage Estimators
+  * Ledoit-Wolf
+  * James-Stein
+* Factor Model
+  * Fundamental
+  * Statistical
+  * Boudt et al (2014) use factor model to estimate higher order comoments
+* Expressing Views
+  * Black - Litterman
+  * Almgren and Chriss, Portfolios from Sorts
+  * Meucci, Fully Flexible Views Framework
+* Other
+  * Resampling
+  * ?
+
+-->
 
   </article>
   <!-- Presenter Notes -->
@@ -502,18 +658,343 @@ Brief explanation of each function.
 
 <slide class="" id="slide-18" style="background:;">
   <hgroup>
+    <h2>Meucci Fully Flexible Views</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Reference Model
+\[ X \sim f_X \]</p></li>
+<li><p>Views
+\[ V \equiv g (X) \sim f_V \]</p></li>
+<li><p>Express View on Ranking
+\[ m \{ V_1 \} \geq  m \{ V_2 \} \geq ... \geq  m \{ V_K \} \]</p></li>
+<li><p>Posterior
+\[ \tilde{f}_x \equiv \underset{f \in V}{\text{ argmin    }} { entropy(f, f_x) } \]</p></li>
+</ul>
+
+<!--
+
+Key difference between BL and FFV
+The Black-Litterman approach allows the portfolio manager to express views
+on the expected returns vector. The model quantifies views and uncertainty
+of views.
+
+The Meucci FFV framework is more general and allows one to express views on the
+market. 
+
+From Meucci paper
+http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1213325
+
+To obtain the posterior, we interpret the views as statements that distort the
+prior distribution, in such a way that the least possible amount of spurious
+structure is imposed. The natural index for the structure of a distribution is
+its entropy. Therefore we define the posterior distribution as the one that
+minimizes the entropy relative to the prior. Then by opinion pooling we assign
+different confidence levels to different views and users.
+
+Reference Model
+We assume the existence of a risk model, i.e. a model for the joint
+distribution of the risk factors, as represented by its probability density
+function (pdf)
+X \dist f\_X
+
+Views
+In the most general case, the user expresses views on generic functions of the
+market g1 (X) , . . . , gK (X). These functions constitute a K -dimensional
+random variable whose joint distribution is implied by the reference model
+V = g (X) \dist f\_V
+
+views in general are statements on only select features of the distribution of V
+The generalized BL views are not necessarily expressed as equality constraint:
+EP can process views expressed as inequalities. In particular, EP can process
+ordering information, frequent in stock and bond management:
+
+m { V\_1 } >=  m { V\_2 } >= ... >= m { V\_K }
+
+The posterior
+The posterior distribution should satisfy the views without adding additional
+structure and should be as close as possible to the reference model
+
+The posterior market distribution is the one that minimizes the relative
+entropy
+
+perform entropy minimization to obtain posterior
+
+perform entropy minimization between a distribution f and the reference model f_x
+\tilde{f}\_x = argmin{ entropy(f, f\_x) } f \in V stands for all the 
+distributions consistent with the views statement
+
+Confidence
+Opinion Pooling
+\tilde{f}\_x^c = (1 - c) * f\_x + c * \tilde{f}\_x
+pooling parameter c in [0,1] represents the confidence levels in the views
+-->
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Almgren-Chriss Portfolios from Sorts</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Define $ S_1, ... , S_n $ as the investment universe of $ n $ assets</p></li>
+<li><p>Defining Sorts</p>
+
+<ul>
+<li>Single complete sort
+\[ r_1 \geq r_2 \geq ... \geq r_n \]</li>
+<li>Sector based sort</li>
+<li>Deciles and Other Divisions</li>
+<li>Single complete sort with longs and shorts</li>
+<li>others</li>
+</ul></li>
+<li><p>Centroid vector, $ c $, is defined as the center of mass of the set $ Q $.</p>
+
+<ul>
+<li>where $ Q $ is the space of consistent expected returns</li>
+</ul></li>
+</ul>
+
+<!--
+
+The Black-Litterman approach allows the portfolio manager to express views
+on the expected returns vector. The model quantifies views and uncertainty
+of views.
+
+Portfolios from Sorts is a method for portfolio optimization based on replacing
+expected returns with information about the order of the expected returns.
+For a single complete sort we assume that each expected return direction is
+equally likely: there is no bias toward some directions over others. The only
+information in the model is the sort itself.
+
+From the paper
+We shall write S1, . . . , Sn for the available investment universe of n stocks.
+In its most general sense, a portfolio sort is a set of inequality relationships
+between the expected returns of these assets. The simplest and most common
+example is a single complete sort which orders all the assets of the portfolio
+by expected return from greatest to least.
+
+r\_1 >= r\_2 >= ... >= r\_n
+
+A sort is a set of beliefs about the first moments of the joint distribution of
+returns
+
+If we have a portfolio of stocks S1,...,Sn ordered so that r1 >= ··· >= rn then
+we are positing two things. First, the obvious, that the expected returns of the
+stocks, or more precisely, the joint distribution of the stocks, respect the
+ordering. Second, this information is the only information we have about the
+expected returns.
+
+the information in an expected return vector relevant for optimization is
+contained completely in its vector direction, not in its magnitude.
+
+centroid vector
+analytical approximation for a single complete sort
+monte carlo estimate for other estimates
+  * sector
+  * sign
+  * buckets
+
+-->
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r"># Load package and data.
+library(PortfolioAnalytics)
+data(edhec)
+R &lt;- edhec[,1:4]
+funds &lt;- colnames(R)
+
+# Construct initial portfolio with basic constraints.
+init.portf &lt;- portfolio.spec(assets=funds)
+init.portf &lt;- add.constraint(portfolio=init.portf, type=&quot;weight_sum&quot;, 
+                             min_sum=0.99, max_sum=1.01)
+init.portf &lt;- add.constraint(portfolio=init.portf, type=&quot;box&quot;,
+                             min=0.05, max=0.5)
+init.portf &lt;- add.objective(portfolio=init.portf, type=&quot;risk&quot;, name=&quot;StdDev&quot;)
+init.portf &lt;- add.objective(portfolio=init.portf, type=&quot;return&quot;, name=&quot;mean&quot;)
+
+# Generate random portfolios for use in the optimization.
+rp &lt;- random_portfolios(init.portf, 5000)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r"># Here we express views on the relative rank of the asset returns
+# E{ R[,2] &lt; R[,3] &lt; R[,1] &lt; R[,4] }
+asset.rank &lt;- c(2, 3, 1, 4)
+</code></pre>
+
+<h3>Meucci: Fully Flexible Views Framework</h3>
+
+<pre><code class="r">p &lt;- rep(1 / nrow(R), nrow(R))
+m.moments &lt;- meucci.ranking(R, p, asset.rank)
+</code></pre>
+
+<h3>Almgren and Chriss: Portfolios from Sorts</h3>
+
+<pre><code class="r">ac.moments &lt;- list()
+ac.moments$mu &lt;- ac.ranking(R, asset.rank)
+# Sample estimate for second moment
+ac.moments$sigma &lt;- cov(R)
+</code></pre>
+
+<!--
+meucci.ranking does the entropy minimization and computes the first and second
+moments given the market data and posterior probability.
+
+EntropyProg does the entropy minimization and returns the posterior probabilities
+
+meucci.moments computes the first and second moments given the market data and
+posterior probability
+
+ac.ranking computes the estimated centroid vector from a single complete sort
+using the analytical approximation as described in R. Almgren and N. Chriss,
+"Portfolios from Sorts". The centroid is estimated and then scaled such that it
+is on a scale similar to the asset returns. By default, the centroid vector is
+scaled according to the median of the asset mean returns.
+
+-->
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>Example Optimization</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r"># Use moments output from meucci.ranking
+opt.meucci &lt;- optimize.portfolio(R, 
+                                 init.portf, 
+                                 optimize_method=&quot;random&quot;, 
+                                 rp=rp, 
+                                 trace=TRUE,
+                                 momentargs=m.moments)
+
+# Use first moment from ac.ranking. Note second moment is sample covariance
+opt.ac &lt;- optimize.portfolio(R, 
+                             init.portf, 
+                             optimize_method=&quot;random&quot;, 
+                             rp=rp, 
+                             trace=TRUE,
+                             momentargs=ac.moments)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>Optimization Results</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>TODO: Insert image for optimal weights</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>Custom Moment Function</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">moment.ranking &lt;- function(R, n=1, method=c(&quot;meucci&quot;, &quot;ac&quot;)){
+  method &lt;- match.arg(method)
+  tmpR &lt;- apply(tail(R, n), 2, function(x) prod(1 + x) - 1)
+  # Assume that the assets with the highest return will continue to outperform
+  asset.rank &lt;- order(tmpR)
+  switch(method,
+         meucci = {
+           p &lt;- rep(1 / nrow(R), nrow(R))
+           moments &lt;- meucci.ranking(R, p, asset.rank)
+         },
+         ac = {
+           moments &lt;- list()
+           moments$mu &lt;- ac.ranking(R, asset.rank)
+           moments$sigma &lt;- cov(R)
+         })
+  moments
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>Optimization with Periodic Rebalancing</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">opt.bt.meucci &lt;- optimize.portfolio.rebalancing(R, init.portf, 
+                                                optimize_method=&quot;random&quot;, 
+                                                rebalance_on=&quot;quarters&quot;, 
+                                                training_period=100,
+                                                rp=rp,
+                                                momentFUN=&quot;moment.ranking&quot;,
+                                                n=3,
+                                                method=&quot;meucci&quot;)
+
+opt.bt.ac &lt;- optimize.portfolio.rebalancing(R, init.portf, 
+                                            optimize_method=&quot;random&quot;, 
+                                            rebalance_on=&quot;quarters&quot;, 
+                                            training_period=100,
+                                            rp=rp,
+                                            momentFUN=&quot;moment.ranking&quot;,
+                                            n=3,
+                                            method=&quot;ac&quot;)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>Optimization Results</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>TODO: Insert performance summary chart and table of annualized returns</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  <hgroup>
     <h2>Conclusion</h2>
   </hgroup>
   <article data-timings="">
     <ul>
 <li>Introduced the goals and summary of PortfolioAnalytics</li>
 <li>Demonstrated the flexibility through examples</li>
-<li>Exciting plans for GSOC 2014
+<li>Plans for continued development
 
 <ul>
-<li>Support for regime switching</li>
-<li>Support for supervised learning</li>
-<li>many more</li>
+<li>Interface to \(parma\)</li>
+<li>Additional solvers</li>
+<li>&quot;Gallery&quot; of examples</li>
 </ul></li>
 </ul>
 
@@ -533,13 +1014,16 @@ Brief explanation of each function.
 - Thank the GSoC mentors for offering help and guidance during the GSoC project and after as I continued to work on the PortfolioAnalytics package.
 - R/Finance Committee for the conference and the opportunity to talk about PortfolioAnalytics.
 - Google for funding the Google Summer of Code for PortfolioAnalytics and many other proposals for R
+
+Thank everyone for attending
+I hope they learned something and are motivated to use PortfolioAnalytics
 -->
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-19" style="background:;">
+<slide class="" id="slide-28" style="background:;">
   <hgroup>
     <h2>PortfolioAnalytics Links</h2>
   </hgroup>
@@ -572,7 +1056,7 @@ Brief explanation of each function.
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-20" style="background:;">
+<slide class="" id="slide-29" style="background:;">
   <hgroup>
     <h2>Any Questions?</h2>
   </hgroup>
@@ -582,7 +1066,7 @@ Brief explanation of each function.
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-21" style="background:;">
+<slide class="" id="slide-30" style="background:;">
   <hgroup>
     <h2>References and Useful Links</h2>
   </hgroup>
@@ -634,73 +1118,73 @@ Brief explanation of each function.
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=5 title='Support Multiple Solvers'>
+        data-slide=5 title='New in PortfolioAnalytics'>
          5
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=6 title='Random Portfolios'>
+        data-slide=6 title='Multilayer Optimization'>
          6
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=7 title='Comparison of Random Portfolio Methods (Interactive!)'>
+        data-slide=7 title='Support Multiple Solvers'>
          7
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=8 title='Random Portfolios: Simplex Method'>
+        data-slide=8 title='Random Portfolios'>
          8
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=9 title='Workflow: Specify Portfolio'>
+        data-slide=9 title='Comparison of Random Portfolio Methods (Interactive!)'>
          9
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=10 title='Workflow: Add Constraints'>
+        data-slide=10 title='Random Portfolios: Simplex Method'>
          10
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=11 title='Workflow: Add Objectives'>
+        data-slide=11 title='Workflow: Specify Portfolio'>
          11
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=12 title='Workflow: Run Optimization'>
+        data-slide=12 title='Workflow: Add Constraints'>
          12
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=13 title='Workflow: Analyze Results'>
+        data-slide=13 title='Workflow: Add Objectives'>
          13
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=14 title='What&#39;s New in PortfolioAnalytics'>
+        data-slide=14 title='Workflow: Run Optimization'>
          14
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=15 title='Regime Switching Framework'>
+        data-slide=15 title='Workflow: Analyze Results'>
          15
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=16 title='Multilayer Optimization'>
+        data-slide=16 title='Portfolio Optimization'>
          16
       </a>
     </li>
@@ -712,26 +1196,80 @@ Brief explanation of each function.
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=18 title='Conclusion'>
+        data-slide=18 title='Meucci Fully Flexible Views'>
          18
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=19 title='PortfolioAnalytics Links'>
+        data-slide=19 title='Almgren-Chriss Portfolios from Sorts'>
          19
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=20 title='Any Questions?'>
+        data-slide=20 title='Example'>
          20
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=21 title='References and Useful Links'>
+        data-slide=21 title='Example'>
          21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='Example Optimization'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='Optimization Results'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='Custom Moment Function'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='Optimization with Periodic Rebalancing'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Optimization Results'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='Conclusion'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='PortfolioAnalytics Links'>
+         28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='Any Questions?'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='References and Useful Links'>
+         30
       </a>
     </li>
   </ul>
