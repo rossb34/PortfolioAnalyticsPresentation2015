@@ -179,23 +179,20 @@ PortfolioAnalytics has three methods to generate random portfolios.
 ---
 
 ## Comparison of Random Portfolio Methods (Interactive!)
-
-RP
-
-<!--
 ```{r, results = 'asis', comment = NA, message = F, echo = F}
 load("figures/rp_viz.rda")
 rp_viz$show('inline')
 ```
 
-The feasible space is computed using the EDHEC data for a long only portfolio with a search size of 2000.
+<!--
+The feasible space is computed using the the first 5 assets of the EDHEC data
+for a long only portfolio with a search size of 2000.
 -->
 
 ---
 
 ## Random Portfolios: Simplex Method
-
-RP Simplex
+![](figures/fev_plot.png)
 
 <!--
 FEV (Face-Edge-Vertex bias values control how concentrated a portfolio is. This can clearly be seen in the plot. As FEV approaches infinity, the portfolio weight will be concentrated on a single asset. PortfolioAnalytics allows you to specify a vector of fev values for comprehensive coverage of the feasible space. 
@@ -571,30 +568,30 @@ monte carlo estimate for other estimates
 
 ---
 
-## Example
+## Example 1: Data and Portfolio
 ```{r eval=FALSE}
 # Load package and data.
 library(PortfolioAnalytics)
-data(edhec)
+source("data_prep.R")
 R <- edhec[,1:4]
 funds <- colnames(R)
 
-# Construct initial portfolio with basic constraints.
-init.portf <- portfolio.spec(assets=funds)
-init.portf <- add.constraint(portfolio=init.portf, type="weight_sum", 
-                             min_sum=0.99, max_sum=1.01)
-init.portf <- add.constraint(portfolio=init.portf, type="box",
-                             min=0.05, max=0.5)
-init.portf <- add.objective(portfolio=init.portf, type="risk", name="StdDev")
-init.portf <- add.objective(portfolio=init.portf, type="return", name="mean")
+# Construct portfolio
+meanSD.portf <- portfolio.spec(assets=funds)
+meanSD.portf <- add.constraint(portfolio=meanSD.portf, type="weight_sum",
+                               min_sum=0.99, max_sum=1.01)
+meanSD.portf <- add.constraint(portfolio=meanSD.portf, type="box",
+                               min=0.05, max=0.5)
+meanSD.portf <- add.objective(portfolio=meanSD.portf, type="risk", name="StdDev")
+meanSD.portf <- add.objective(portfolio=meanSD.portf, type="return", name="mean")
 
 # Generate random portfolios for use in the optimization.
-rp <- random_portfolios(init.portf, 5000)
+rp <- random_portfolios(meanSD.portf, 5000)
 ```
 
 ---
 
-## Example
+## Example 1: Express Views
 ```{r eval=FALSE}
 # Here we express views on the relative rank of the asset returns
 # E{ R[,2] < R[,3] < R[,1] < R[,4] }
@@ -634,22 +631,20 @@ scaled according to the median of the asset mean returns.
 
 ---
 
-## Example Optimization
+## Example 1: Optimization
 
 ```{r eval=FALSE}
 # Use moments output from meucci.ranking
-opt.meucci <- optimize.portfolio(R, 
-                                 init.portf, 
-                                 optimize_method="random", 
-                                 rp=rp, 
+opt.meucci <- optimize.portfolio(R, portfolio=meanSD.portf,
+                                 optimize_method="random",
+                                 rp=rp,
                                  trace=TRUE,
                                  momentargs=m.moments)
 
 # Use first moment from ac.ranking. Note second moment is sample covariance
-opt.ac <- optimize.portfolio(R, 
-                             init.portf, 
-                             optimize_method="random", 
-                             rp=rp, 
+opt.ac <- optimize.portfolio(R, portfolio=meanSD.portf,
+                             optimize_method="random",
+                             rp=rp,
                              trace=TRUE,
                              momentargs=ac.moments)
 ```
@@ -657,12 +652,12 @@ opt.ac <- optimize.portfolio(R,
 
 ---
 
-## Optimization Results
-TODO: Insert image for optimal weights
+## Example 1: Optimization Results
+![](figures/weights_ex1.png)
 
 ---
 
-## Custom Moment Function
+## Example 2: Custom Moment Function
 ```{r eval=FALSE, tidy=FALSE}
 moment.ranking <- function(R, n=1, method=c("meucci", "ac")){
   method <- match.arg(method)
@@ -685,32 +680,109 @@ moment.ranking <- function(R, n=1, method=c("meucci", "ac")){
 
 ---
 
-## Optimization with Periodic Rebalancing
+## Example 2: Optimization with Periodic Rebalancing
 
 ```{r eval=FALSE, tidy=FALSE}
-opt.bt.meucci <- optimize.portfolio.rebalancing(R, init.portf, 
-                                                optimize_method="random", 
-                                                rebalance_on="quarters", 
+opt.bt.meucci <- optimize.portfolio.rebalancing(R, portfolio=meanSD.portf,
+                                                optimize_method="random", rp=rp,
+                                                rebalance_on="quarters",
                                                 training_period=100,
-                                                rp=rp,
                                                 momentFUN="moment.ranking",
-                                                n=3,
-                                                method="meucci")
+                                                n=3, method="meucci")
 
-opt.bt.ac <- optimize.portfolio.rebalancing(R, init.portf, 
-                                            optimize_method="random", 
-                                            rebalance_on="quarters", 
+opt.bt.ac <- optimize.portfolio.rebalancing(R, portfolio=meanSD.portf,
+                                            optimize_method="random", rp=rp,
+                                            rebalance_on="quarters",
                                             training_period=100,
-                                            rp=rp,
                                             momentFUN="moment.ranking",
-                                            n=3,
-                                            method="ac")
+                                            n=3, method="ac")
 ```
 
 ---
 
-## Optimization Results
-TODO: Insert performance summary chart and table of annualized returns
+## Example 2: Optimization Results
+![](figures/ret_ex2.png)
+
+---
+
+## Example 3: Data and Portfolio
+```{r eval=FALSE}
+# Data
+R <- edhec[,1:10]
+funds <- colnames(R)
+
+# Construct portfolio
+ES.portf <- portfolio.spec(assets=funds)
+ES.portf <- add.constraint(portfolio=ES.portf, type="weight_sum",
+                             min_sum=0.99, max_sum=1.01)
+ES.portf <- add.constraint(portfolio=ES.portf, type="long_only")
+ES.portf <- add.objective(portfolio=ES.portf, type="risk", name="ES",
+                            arguments=list(p=0.9, clean="boudt"))
+ES.portf <- add.objective(portfolio=ES.portf, type="risk_budget", 
+                            name="ES", max_prisk=0.25, 
+                            arguments=list(p=0.9, clean="boudt"))
+
+# Generate random portfolios
+rp <- random_portfolios(ES.portf, 5000)
+```
+
+---
+
+## Example 3: Fit Statistical Factor Model
+```{r eval=FALSE, tidy=FALSE}
+# This is not necessary for the optimization, but demonstrates how to extract
+# the moments for use in custom objective function
+fit <- statistical.factor.model(R, k=3)
+
+# Extract the moments
+sigma <- extractCovariance(fit)
+m3 <- extractCoskewness(fit)
+m4 <- extractCokurtosis(fit)
+```
+
+---
+
+## Example 3: Custom Moment Function
+```{r eval=FALSE}
+fm.moments <- function(R, k=1, clean="boudt"){
+  R <- Return.clean(R, method=clean[1])
+  fit <- statistical.factor.model(R=R, k=k)
+  momentargs <- list()
+  momentargs$mu <- matrix(as.vector(apply(R,2,'mean')),ncol=1)
+  # momentargs$mu <- matrix(rep(0, ncol(R)),ncol=1)
+  momentargs$sigma <- extractCovariance(fit)
+  momentargs$m3 <- extractCoskewness(fit)
+  momentargs$m4 <- extractCokurtosis(fit)
+  return(momentargs)
+}
+```
+
+---
+
+## Example 3: Optimization with Periodic Rebalancing
+```{r eval=FALSE, tidy=FALSE}
+# Higher moment estimates from statistical factor model
+minES.boudt <- optimize.portfolio.rebalancing(R=R, portfolio=ES.portf, 
+                                              momentFUN=fm.moments, 
+                                              k=3, clean="boudt",
+                                              optimize_method="random", rp=rp,
+                                              rebalance_on="quarters",
+                                              training_period=60,
+                                              trace=TRUE)
+
+# Sample estimates of the moments
+minES.sample <- optimize.portfolio.rebalancing(R=R, portfolio=ES.portf, 
+                                               optimize_method="random", rp=rp,
+                                               rebalance_on="quarters",
+                                               training_period=60,
+                                               trace=TRUE)
+
+```
+
+---
+
+## Example 3: Optimization Results
+![](figures/ret_ex3.png)
 
 
 ---
@@ -733,10 +805,16 @@ Many thanks to...
 * R/Finance Committee
 
 <!---
-- One of the best things about GSoC is the opportunity to work and interact with the mentors.
-- Thank the GSoC mentors for offering help and guidance during the GSoC project and after as I continued to work on the PortfolioAnalytics package.
-- R/Finance Committee for the conference and the opportunity to talk about PortfolioAnalytics.
-- Google for funding the Google Summer of Code for PortfolioAnalytics and many other proposals for R
+Hammer home the point of modular architecture and ability to "plug" custom
+moments and objective functions to define your own optimization problems
+- One of the best things about GSoC is the opportunity to work and interact
+with the mentors.
+- Thank the GSoC mentors for offering help and guidance during the GSoC project
+and after as I continued to work on the PortfolioAnalytics package.
+- R/Finance Committee for the conference and the opportunity to talk about
+PortfolioAnalytics.
+- Google for funding the Google Summer of Code for PortfolioAnalytics and many
+other proposals for R
 
 Thank everyone for attending
 I hope they learned something and are motivated to use PortfolioAnalytics
@@ -776,6 +854,6 @@ and view it here
 * [PerformanceAnalytics](http://cran.r-project.org/web/packages/PerformanceAnalytics/index.html)
 * [Patrick Burns Random Portfolios](http://www.burns-stat.com/pages/Finance/randport_practice_theory_annotated.pdf)
 * [W.T. Shaw Random Portfolios](http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1856476)
-* Martellini paper
-* Boudt paper
+* [Improved Forecasts of Higher-Order Co-moments and Implications for Portfolio Selection](http://docs.edhec-risk.com/EAID-2008-Doc/documents/Higher_Order_Comoments.pdf)
+* [Higher Order Comoments of Multifactor Models and Asset Allocation](http://papers.ssrn.com/sol3/papers.cfm?abstract_id=2409603)
 * [Shiny App](http://spark.rstudio.com/rossbennett3/PortfolioOptimization/)

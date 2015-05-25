@@ -290,24 +290,19 @@ Brief explanation of each solver and what optimization problems are supported
     <h2>Comparison of Random Portfolio Methods (Interactive!)</h2>
   </hgroup>
   <article data-timings="">
-    <p>RP</p>
+    <pre><code>Warning: cannot open compressed file &#39;figures/rp_viz.rda&#39;, probable reason
+&#39;No such file or directory&#39;
+</code></pre>
+
+<pre><code>Error: cannot open the connection
+</code></pre>
+
+<pre><code>Error: object &#39;rp_viz&#39; not found
+</code></pre>
 
 <!--
-
-```
-Warning: cannot open compressed file 'figures/rp_viz.rda', probable reason
-'No such file or directory'
-```
-
-```
-Error: cannot open the connection
-```
-
-```
-Error: object 'rp_viz' not found
-```
-
-The feasible space is computed using the EDHEC data for a long only portfolio with a search size of 2000.
+The feasible space is computed using the the first 5 assets of the EDHEC data
+for a long only portfolio with a search size of 2000.
 -->
 
   </article>
@@ -319,7 +314,7 @@ The feasible space is computed using the EDHEC data for a long only portfolio wi
     <h2>Random Portfolios: Simplex Method</h2>
   </hgroup>
   <article data-timings="">
-    <p>RP Simplex</p>
+    <p><img src="figures/fev_plot.png" alt=""></p>
 
 <!--
 FEV (Face-Edge-Vertex bias values control how concentrated a portfolio is. This can clearly be seen in the plot. As FEV approaches infinity, the portfolio weight will be concentrated on a single asset. PortfolioAnalytics allows you to specify a vector of fev values for comprehensive coverage of the feasible space. 
@@ -806,26 +801,26 @@ monte carlo estimate for other estimates
 
 <slide class="" id="slide-20" style="background:;">
   <hgroup>
-    <h2>Example</h2>
+    <h2>Example 1: Data and Portfolio</h2>
   </hgroup>
   <article data-timings="">
     <pre><code class="r"># Load package and data.
 library(PortfolioAnalytics)
-data(edhec)
+source(&quot;data_prep.R&quot;)
 R &lt;- edhec[,1:4]
 funds &lt;- colnames(R)
 
-# Construct initial portfolio with basic constraints.
-init.portf &lt;- portfolio.spec(assets=funds)
-init.portf &lt;- add.constraint(portfolio=init.portf, type=&quot;weight_sum&quot;, 
-                             min_sum=0.99, max_sum=1.01)
-init.portf &lt;- add.constraint(portfolio=init.portf, type=&quot;box&quot;,
-                             min=0.05, max=0.5)
-init.portf &lt;- add.objective(portfolio=init.portf, type=&quot;risk&quot;, name=&quot;StdDev&quot;)
-init.portf &lt;- add.objective(portfolio=init.portf, type=&quot;return&quot;, name=&quot;mean&quot;)
+# Construct portfolio
+meanSD.portf &lt;- portfolio.spec(assets=funds)
+meanSD.portf &lt;- add.constraint(portfolio=meanSD.portf, type=&quot;weight_sum&quot;,
+                               min_sum=0.99, max_sum=1.01)
+meanSD.portf &lt;- add.constraint(portfolio=meanSD.portf, type=&quot;box&quot;,
+                               min=0.05, max=0.5)
+meanSD.portf &lt;- add.objective(portfolio=meanSD.portf, type=&quot;risk&quot;, name=&quot;StdDev&quot;)
+meanSD.portf &lt;- add.objective(portfolio=meanSD.portf, type=&quot;return&quot;, name=&quot;mean&quot;)
 
 # Generate random portfolios for use in the optimization.
-rp &lt;- random_portfolios(init.portf, 5000)
+rp &lt;- random_portfolios(meanSD.portf, 5000)
 </code></pre>
 
   </article>
@@ -834,7 +829,7 @@ rp &lt;- random_portfolios(init.portf, 5000)
 
 <slide class="" id="slide-21" style="background:;">
   <hgroup>
-    <h2>Example</h2>
+    <h2>Example 1: Express Views</h2>
   </hgroup>
   <article data-timings="">
     <pre><code class="r"># Here we express views on the relative rank of the asset returns
@@ -879,22 +874,20 @@ scaled according to the median of the asset mean returns.
 
 <slide class="" id="slide-22" style="background:;">
   <hgroup>
-    <h2>Example Optimization</h2>
+    <h2>Example 1: Optimization</h2>
   </hgroup>
   <article data-timings="">
     <pre><code class="r"># Use moments output from meucci.ranking
-opt.meucci &lt;- optimize.portfolio(R, 
-                                 init.portf, 
-                                 optimize_method=&quot;random&quot;, 
-                                 rp=rp, 
+opt.meucci &lt;- optimize.portfolio(R, portfolio=meanSD.portf,
+                                 optimize_method=&quot;random&quot;,
+                                 rp=rp,
                                  trace=TRUE,
                                  momentargs=m.moments)
 
 # Use first moment from ac.ranking. Note second moment is sample covariance
-opt.ac &lt;- optimize.portfolio(R, 
-                             init.portf, 
-                             optimize_method=&quot;random&quot;, 
-                             rp=rp, 
+opt.ac &lt;- optimize.portfolio(R, portfolio=meanSD.portf,
+                             optimize_method=&quot;random&quot;,
+                             rp=rp,
                              trace=TRUE,
                              momentargs=ac.moments)
 </code></pre>
@@ -905,10 +898,10 @@ opt.ac &lt;- optimize.portfolio(R,
 
 <slide class="" id="slide-23" style="background:;">
   <hgroup>
-    <h2>Optimization Results</h2>
+    <h2>Example 1: Optimization Results</h2>
   </hgroup>
   <article data-timings="">
-    <p>TODO: Insert image for optimal weights</p>
+    <p><img src="figures/weights_ex1.png" alt=""></p>
 
   </article>
   <!-- Presenter Notes -->
@@ -916,7 +909,7 @@ opt.ac &lt;- optimize.portfolio(R,
 
 <slide class="" id="slide-24" style="background:;">
   <hgroup>
-    <h2>Custom Moment Function</h2>
+    <h2>Example 2: Custom Moment Function</h2>
   </hgroup>
   <article data-timings="">
     <pre><code class="r">moment.ranking &lt;- function(R, n=1, method=c(&quot;meucci&quot;, &quot;ac&quot;)){
@@ -944,26 +937,22 @@ opt.ac &lt;- optimize.portfolio(R,
 
 <slide class="" id="slide-25" style="background:;">
   <hgroup>
-    <h2>Optimization with Periodic Rebalancing</h2>
+    <h2>Example 2: Optimization with Periodic Rebalancing</h2>
   </hgroup>
   <article data-timings="">
-    <pre><code class="r">opt.bt.meucci &lt;- optimize.portfolio.rebalancing(R, init.portf, 
-                                                optimize_method=&quot;random&quot;, 
-                                                rebalance_on=&quot;quarters&quot;, 
+    <pre><code class="r">opt.bt.meucci &lt;- optimize.portfolio.rebalancing(R, portfolio=meanSD.portf,
+                                                optimize_method=&quot;random&quot;, rp=rp,
+                                                rebalance_on=&quot;quarters&quot;,
                                                 training_period=100,
-                                                rp=rp,
                                                 momentFUN=&quot;moment.ranking&quot;,
-                                                n=3,
-                                                method=&quot;meucci&quot;)
+                                                n=3, method=&quot;meucci&quot;)
 
-opt.bt.ac &lt;- optimize.portfolio.rebalancing(R, init.portf, 
-                                            optimize_method=&quot;random&quot;, 
-                                            rebalance_on=&quot;quarters&quot;, 
+opt.bt.ac &lt;- optimize.portfolio.rebalancing(R, portfolio=meanSD.portf,
+                                            optimize_method=&quot;random&quot;, rp=rp,
+                                            rebalance_on=&quot;quarters&quot;,
                                             training_period=100,
-                                            rp=rp,
                                             momentFUN=&quot;moment.ranking&quot;,
-                                            n=3,
-                                            method=&quot;ac&quot;)
+                                            n=3, method=&quot;ac&quot;)
 </code></pre>
 
   </article>
@@ -972,16 +961,122 @@ opt.bt.ac &lt;- optimize.portfolio.rebalancing(R, init.portf,
 
 <slide class="" id="slide-26" style="background:;">
   <hgroup>
-    <h2>Optimization Results</h2>
+    <h2>Example 2: Optimization Results</h2>
   </hgroup>
   <article data-timings="">
-    <p>TODO: Insert performance summary chart and table of annualized returns</p>
+    <p><img src="figures/ret_ex2.png" alt=""></p>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
 <slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h2>Example 3: Data and Portfolio</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r"># Data
+R &lt;- edhec[,1:10]
+funds &lt;- colnames(R)
+
+# Construct portfolio
+ES.portf &lt;- portfolio.spec(assets=funds)
+ES.portf &lt;- add.constraint(portfolio=ES.portf, type=&quot;weight_sum&quot;,
+                             min_sum=0.99, max_sum=1.01)
+ES.portf &lt;- add.constraint(portfolio=ES.portf, type=&quot;long_only&quot;)
+ES.portf &lt;- add.objective(portfolio=ES.portf, type=&quot;risk&quot;, name=&quot;ES&quot;,
+                            arguments=list(p=0.9, clean=&quot;boudt&quot;))
+ES.portf &lt;- add.objective(portfolio=ES.portf, type=&quot;risk_budget&quot;, 
+                            name=&quot;ES&quot;, max_prisk=0.25, 
+                            arguments=list(p=0.9, clean=&quot;boudt&quot;))
+
+# Generate random portfolios
+rp &lt;- random_portfolios(ES.portf, 5000)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
+  <hgroup>
+    <h2>Example 3: Fit Statistical Factor Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r"># This is not necessary for the optimization, but demonstrates how to extract
+# the moments for use in custom objective function
+fit &lt;- statistical.factor.model(R, k=3)
+
+# Extract the moments
+sigma &lt;- extractCovariance(fit)
+m3 &lt;- extractCoskewness(fit)
+m4 &lt;- extractCokurtosis(fit)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
+  <hgroup>
+    <h2>Example 3: Custom Moment Function</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">fm.moments &lt;- function(R, k=1, clean=&quot;boudt&quot;){
+  R &lt;- Return.clean(R, method=clean[1])
+  fit &lt;- statistical.factor.model(R=R, k=k)
+  momentargs &lt;- list()
+  momentargs$mu &lt;- matrix(as.vector(apply(R,2,&#39;mean&#39;)),ncol=1)
+  # momentargs$mu &lt;- matrix(rep(0, ncol(R)),ncol=1)
+  momentargs$sigma &lt;- extractCovariance(fit)
+  momentargs$m3 &lt;- extractCoskewness(fit)
+  momentargs$m4 &lt;- extractCokurtosis(fit)
+  return(momentargs)
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-30" style="background:;">
+  <hgroup>
+    <h2>Example 3: Optimization with Periodic Rebalancing</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r"># Higher moment estimates from statistical factor model
+minES.boudt &lt;- optimize.portfolio.rebalancing(R=R, portfolio=ES.portf, 
+                                              momentFUN=fm.moments, 
+                                              k=3, clean=&quot;boudt&quot;,
+                                              optimize_method=&quot;random&quot;, rp=rp,
+                                              rebalance_on=&quot;quarters&quot;,
+                                              training_period=60,
+                                              trace=TRUE)
+
+# Sample estimates of the moments
+minES.sample &lt;- optimize.portfolio.rebalancing(R=R, portfolio=ES.portf, 
+                                               optimize_method=&quot;random&quot;, rp=rp,
+                                               rebalance_on=&quot;quarters&quot;,
+                                               training_period=60,
+                                               trace=TRUE)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-31" style="background:;">
+  <hgroup>
+    <h2>Example 3: Optimization Results</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="figures/ret_ex3.png" alt=""></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-32" style="background:;">
   <hgroup>
     <h2>Conclusion</h2>
   </hgroup>
@@ -1010,10 +1105,16 @@ opt.bt.ac &lt;- optimize.portfolio.rebalancing(R, init.portf,
 </ul>
 
 <!---
-- One of the best things about GSoC is the opportunity to work and interact with the mentors.
-- Thank the GSoC mentors for offering help and guidance during the GSoC project and after as I continued to work on the PortfolioAnalytics package.
-- R/Finance Committee for the conference and the opportunity to talk about PortfolioAnalytics.
-- Google for funding the Google Summer of Code for PortfolioAnalytics and many other proposals for R
+Hammer home the point of modular architecture and ability to "plug" custom
+moments and objective functions to define your own optimization problems
+- One of the best things about GSoC is the opportunity to work and interact
+with the mentors.
+- Thank the GSoC mentors for offering help and guidance during the GSoC project
+and after as I continued to work on the PortfolioAnalytics package.
+- R/Finance Committee for the conference and the opportunity to talk about
+PortfolioAnalytics.
+- Google for funding the Google Summer of Code for PortfolioAnalytics and many
+other proposals for R
 
 Thank everyone for attending
 I hope they learned something and are motivated to use PortfolioAnalytics
@@ -1023,7 +1124,7 @@ I hope they learned something and are motivated to use PortfolioAnalytics
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-28" style="background:;">
+<slide class="" id="slide-33" style="background:;">
   <hgroup>
     <h2>PortfolioAnalytics Links</h2>
   </hgroup>
@@ -1056,7 +1157,7 @@ I hope they learned something and are motivated to use PortfolioAnalytics
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-29" style="background:;">
+<slide class="" id="slide-34" style="background:;">
   <hgroup>
     <h2>Any Questions?</h2>
   </hgroup>
@@ -1066,7 +1167,7 @@ I hope they learned something and are motivated to use PortfolioAnalytics
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-30" style="background:;">
+<slide class="" id="slide-35" style="background:;">
   <hgroup>
     <h2>References and Useful Links</h2>
   </hgroup>
@@ -1079,8 +1180,8 @@ I hope they learned something and are motivated to use PortfolioAnalytics
 <li><a href="http://cran.r-project.org/web/packages/PerformanceAnalytics/index.html">PerformanceAnalytics</a></li>
 <li><a href="http://www.burns-stat.com/pages/Finance/randport_practice_theory_annotated.pdf">Patrick Burns Random Portfolios</a></li>
 <li><a href="http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1856476">W.T. Shaw Random Portfolios</a></li>
-<li>Martellini paper</li>
-<li>Boudt paper</li>
+<li><a href="http://docs.edhec-risk.com/EAID-2008-Doc/documents/Higher_Order_Comoments.pdf">Improved Forecasts of Higher-Order Co-moments and Implications for Portfolio Selection</a></li>
+<li><a href="http://papers.ssrn.com/sol3/papers.cfm?abstract_id=2409603">Higher Order Comoments of Multifactor Models and Asset Allocation</a></li>
 <li><a href="http://spark.rstudio.com/rossbennett3/PortfolioOptimization/">Shiny App</a></li>
 </ul>
 
@@ -1208,68 +1309,98 @@ I hope they learned something and are motivated to use PortfolioAnalytics
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=20 title='Example'>
+        data-slide=20 title='Example 1: Data and Portfolio'>
          20
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=21 title='Example'>
+        data-slide=21 title='Example 1: Express Views'>
          21
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=22 title='Example Optimization'>
+        data-slide=22 title='Example 1: Optimization'>
          22
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=23 title='Optimization Results'>
+        data-slide=23 title='Example 1: Optimization Results'>
          23
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=24 title='Custom Moment Function'>
+        data-slide=24 title='Example 2: Custom Moment Function'>
          24
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=25 title='Optimization with Periodic Rebalancing'>
+        data-slide=25 title='Example 2: Optimization with Periodic Rebalancing'>
          25
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=26 title='Optimization Results'>
+        data-slide=26 title='Example 2: Optimization Results'>
          26
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=27 title='Conclusion'>
+        data-slide=27 title='Example 3: Data and Portfolio'>
          27
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=28 title='PortfolioAnalytics Links'>
+        data-slide=28 title='Example 3: Fit Statistical Factor Model'>
          28
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=29 title='Any Questions?'>
+        data-slide=29 title='Example 3: Custom Moment Function'>
          29
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=30 title='References and Useful Links'>
+        data-slide=30 title='Example 3: Optimization with Periodic Rebalancing'>
          30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='Example 3: Optimization Results'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='Conclusion'>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='PortfolioAnalytics Links'>
+         33
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='Any Questions?'>
+         34
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=35 title='References and Useful Links'>
+         35
       </a>
     </li>
   </ul>
