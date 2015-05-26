@@ -6,8 +6,8 @@ load("data/edhec.rda")
 colnames(edhec) <- c("CA", "CTAG", "DS", "EM", "EMN", "ED", "FIA", "GM", "LSE", "MA", "RV", "SS", "FoF")
 
 
-if(file.exists("data/ret.sector.rda")){
-  load("data/ret.sector.rda")
+if(file.exists("data/sector.rda")){
+  load("data/sector.rda")
 } else {
   md <- new.env()
   symbols <- c("XLF", "XLP", "XLE", "XLY", "XLV", "XLI", "XLB", "XLK", "XLU")
@@ -20,5 +20,5 @@ if(file.exists("data/ret.sector.rda")){
   #     assign(symbol,x)
   # }
   ret.sector <- na.omit(Return.calculate(do.call(cbind, eapply(md, function(x) Ad(x))), "discrete"))
-  save(edhec, file="data/ret.sector.rda")
+  save(ret.sector, file="data/sector.rda")
 }

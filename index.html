@@ -220,6 +220,15 @@ Highlight a few things about each point
   <article data-timings="">
     <p><img src="mult_portf.png" alt=""></p>
 
+<!--
+explanation of how the multilayer optimization works
+start with portfolio of subportfolios
+the subportfolios could be countris, sectors, etc.
+optimize subportfolios
+this gives us 'n' synthetic return streams for 'n' sub portfolios
+we then optimize the top level portfolio using the 'n' synthetic return streams
+-->
+
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -317,7 +326,10 @@ for a long only portfolio with a search size of 2000.
     <p><img src="figures/fev_plot.png" alt=""></p>
 
 <!--
-FEV (Face-Edge-Vertex bias values control how concentrated a portfolio is. This can clearly be seen in the plot. As FEV approaches infinity, the portfolio weight will be concentrated on a single asset. PortfolioAnalytics allows you to specify a vector of fev values for comprehensive coverage of the feasible space. 
+FEV (Face-Edge-Vertex bias values control how concentrated a portfolio is. This
+can clearly be seen in the plot. As FEV approaches infinity, the portfolio
+weight will be concentrated on a single asset. PortfolioAnalytics allows you to
+specify a vector of fev values for comprehensive coverage of the feasible space. 
 -->
 
   </article>
@@ -337,10 +349,16 @@ FEV (Face-Edge-Vertex bias values control how concentrated a portfolio is. This 
 ## NULL
 </code></pre>
 
-<p>Initializes the portfolio object that holds portfolio level data, constraints, and objectives</p>
+<p>Initializes the portfolio object that holds portfolio level data, constraints,
+and objectives</p>
 
 <!--
-The portfolio object is an S3 object that holds portfolio-level data, constraints, and objectives. The portfolio-level data includes asset names and initial weights, labels to categorize assets, and a sequence of weights for random portfolios. The main argument is assets which can be a character vector (most common use), named numeric vector, or scalar value specifying number of assets.
+The portfolio object is an S3 object that holds portfolio-level data,
+constraints, and objectives. The portfolio-level data includes asset names and
+initial weights, labels to categorize assets, and a sequence of weights for
+random portfolios. The main argument is assets which can be a character vector
+(most common use), named numeric vector, or scalar value specifying number of
+assets.
 -->
 
   </article>
@@ -372,7 +390,12 @@ The portfolio object is an S3 object that holds portfolio-level data, constraint
 </ul>
 
 <!--
-This adds a constraint object to the portfolio object. Constraints are added to the portfolio object with the add.constraint function. Each constraint added is a separate object and stored in the constraints slot in the portfolio object. In this way, the constraints are modular and one can easily add, remove, or modify the constraints in the portfolio object. Main argument is the type, arguments to the constraint constructor are then passed through the dots (...).
+This adds a constraint object to the portfolio object. Constraints are added to
+the portfolio object with the add.constraint function. Each constraint added is
+a separate object and stored in the constraints slot in the portfolio object.
+In this way, the constraints are modular and one can easily add, remove, or
+modify the constraints in the portfolio object. Main argument is the type,
+arguments to the constraint constructor are then passed through the dots (...).
 -->
 
   </article>
@@ -402,7 +425,12 @@ This adds a constraint object to the portfolio object. Constraints are added to 
 </ul>
 
 <!--
-Objectives are added to the portfolio object with the add.objective function. Each objective added is a separate object and stored in the objectives slot in the portfolio object. In this way, the objectives are modular and one can easily add, remove, or modify the objective objects. The name argument must be a valid R function. Several functions are available in the PerformanceAnalytics package, but custom user defined functions can be used as objective functions.
+Objectives are added to the portfolio object with the add.objective function.
+Each objective added is a separate object and stored in the objectives slot in
+the portfolio object. In this way, the objectives are modular and one can easily
+add, remove, or modify the objective objects. The name argument must be a valid
+R function. Several functions are available in the PerformanceAnalytics package,
+but custom user defined functions can be used as objective functions.
 -->
 
   </article>
@@ -435,11 +463,17 @@ Objectives are added to the portfolio object with the add.objective function. Ea
 </code></pre>
 
 <!--
-* Notice the similarity between these two functions. You only have to specify a few additional arguments for the backtesting.
+* Notice the similarity between these two functions. You only have to specify a
+few additional arguments for the backtesting.
 
-* optimize.portfolio: Main arguments for a single period optimization are the returns (R), portfolio, and optimize_method. We take the portfolio object and parse the constraints and objectives according to the optimization method.
+* optimize.portfolio: Main arguments for a single period optimization are the
+returns (R), portfolio, and optimize_method. We take the portfolio object and
+parse the constraints and objectives according to the optimization method.
 
-* optimize.portfolio.rebalancing: Supports periodic rebalancing (backtesting) to examine out of sample performance. Helps refine constraints and objectives by analyzing out or sample performance. Essentially a wrapper around optimize.portfolio that handles the time interface.
+* optimize.portfolio.rebalancing: Supports periodic rebalancing (backtesting) to
+examine out of sample performance. Helps refine constraints and objectives by
+analyzing out or sample performance. Essentially a wrapper around
+optimize.portfolio that handles the time interface.
 -->
 
   </article>
@@ -558,7 +592,8 @@ Quadratic Utility
   * expected returns vector
   * covariance matrix
 
-Fourth order expansion of the Constant Relative Risk Aversion (CRRA) Utility Function
+Fourth order expansion of the Constant Relative Risk Aversion (CRRA) 
+Utility Function
 Martellini and Ziemann (2010) and Boudt et al (2014)
   * expected returns vector (assume zero mean and omit)
   * covariance matrix
@@ -735,14 +770,14 @@ pooling parameter c in [0,1] represents the confidence levels in the views
   </hgroup>
   <article data-timings="">
     <ul>
-<li><p>Define $ S_1, ... , S_n $ as the investment universe of $ n $ assets</p></li>
+<li><p>Define $ S_1, S_2, ... , S_n $ as the investment universe of $ n $ assets</p></li>
 <li><p>Defining Sorts</p>
 
 <ul>
 <li>Single complete sort
 \[ r_1 \geq r_2 \geq ... \geq r_n \]</li>
 <li>Sector based sort</li>
-<li>Deciles and Other Divisions</li>
+<li>Deciles and other divisions</li>
 <li>Single complete sort with longs and shorts</li>
 <li>others</li>
 </ul></li>
@@ -801,10 +836,44 @@ monte carlo estimate for other estimates
 
 <slide class="" id="slide-20" style="background:;">
   <hgroup>
+    <h2>Example 1 and 2</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Consider an allocation to hedge funds using the EDHEC-Risk Alternative Index as
+a proxy. </p>
+
+<ul>
+<li>Simple example of expressing a view on the order of the expected
+returns of assets using both Meucci&#39;s Fully Flexible Views and the 
+Almgren-Chriss framework</li>
+<li>Establish a quantitative rule for our view on the order of the expected
+returns of assets and test on historical data.</li>
+</ul>
+
+<!--
+EDHEC-Risk Alternative Index is not investable, but offers a good proxy for
+hedge fund style returns. EDHEC data is from 1997-01-31 to 2015-03-31
+
+First example is very simple to demonstrate how this can be done in 
+PortfolioAnalytics to understand the framework. Start with a case of expressing
+a view on the order of the expected returns of assets.
+
+Then examine a more complex problem in which we wish to establish a quantitative
+rule for our view on the order of the expected returns of assets and test on
+historical data to evaluate out of sample performance. Custom moment function
+and periodic rebalancing.
+-->
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
     <h2>Example 1: Data and Portfolio</h2>
   </hgroup>
   <article data-timings="">
-    <pre><code class="r"># Load package and data.
+    <pre><code class="r"># Load package and data
 library(PortfolioAnalytics)
 source(&quot;data_prep.R&quot;)
 R &lt;- edhec[,1:4]
@@ -827,7 +896,7 @@ rp &lt;- random_portfolios(meanSD.portf, 5000)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-21" style="background:;">
+<slide class="" id="slide-22" style="background:;">
   <hgroup>
     <h2>Example 1: Express Views</h2>
   </hgroup>
@@ -855,10 +924,8 @@ ac.moments$sigma &lt;- cov(R)
 meucci.ranking does the entropy minimization and computes the first and second
 moments given the market data and posterior probability.
 
-EntropyProg does the entropy minimization and returns the posterior probabilities
-
-meucci.moments computes the first and second moments given the market data and
-posterior probability
+EntropyProg does the entropy minimization and returns the posterior
+probabilities
 
 ac.ranking computes the estimated centroid vector from a single complete sort
 using the analytical approximation as described in R. Almgren and N. Chriss,
@@ -872,7 +939,7 @@ scaled according to the median of the asset mean returns.
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-22" style="background:;">
+<slide class="" id="slide-23" style="background:;">
   <hgroup>
     <h2>Example 1: Optimization</h2>
   </hgroup>
@@ -892,13 +959,18 @@ opt.ac &lt;- optimize.portfolio(R, portfolio=meanSD.portf,
                              momentargs=ac.moments)
 </code></pre>
 
+<!--
+single period optimization
+note the objects passed to momentargs
+-->
+
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-23" style="background:;">
+<slide class="" id="slide-24" style="background:;">
   <hgroup>
-    <h2>Example 1: Optimization Results</h2>
+    <h2>Example 1: Optimization Results Optimal Weights</h2>
   </hgroup>
   <article data-timings="">
     <p><img src="figures/weights_ex1.png" alt=""></p>
@@ -907,7 +979,7 @@ opt.ac &lt;- optimize.portfolio(R, portfolio=meanSD.portf,
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-24" style="background:;">
+<slide class="" id="slide-25" style="background:;">
   <hgroup>
     <h2>Example 2: Custom Moment Function</h2>
   </hgroup>
@@ -931,11 +1003,16 @@ opt.ac &lt;- optimize.portfolio(R, portfolio=meanSD.portf,
 }
 </code></pre>
 
+<!--
+meucci.moments computes the first and second moments given the market data and
+posterior probability
+-->
+
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-25" style="background:;">
+<slide class="" id="slide-26" style="background:;">
   <hgroup>
     <h2>Example 2: Optimization with Periodic Rebalancing</h2>
   </hgroup>
@@ -943,23 +1020,27 @@ opt.ac &lt;- optimize.portfolio(R, portfolio=meanSD.portf,
     <pre><code class="r">opt.bt.meucci &lt;- optimize.portfolio.rebalancing(R, portfolio=meanSD.portf,
                                                 optimize_method=&quot;random&quot;, rp=rp,
                                                 rebalance_on=&quot;quarters&quot;,
-                                                training_period=100,
+                                                training_period=72,
                                                 momentFUN=&quot;moment.ranking&quot;,
                                                 n=3, method=&quot;meucci&quot;)
 
 opt.bt.ac &lt;- optimize.portfolio.rebalancing(R, portfolio=meanSD.portf,
                                             optimize_method=&quot;random&quot;, rp=rp,
                                             rebalance_on=&quot;quarters&quot;,
-                                            training_period=100,
+                                            training_period=72,
                                             momentFUN=&quot;moment.ranking&quot;,
                                             n=3, method=&quot;ac&quot;)
 </code></pre>
+
+<!--
+note the custom moment function and the momentFUN args passed in
+-->
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-26" style="background:;">
+<slide class="" id="slide-27" style="background:;">
   <hgroup>
     <h2>Example 2: Optimization Results</h2>
   </hgroup>
@@ -970,26 +1051,50 @@ opt.bt.ac &lt;- optimize.portfolio.rebalancing(R, portfolio=meanSD.portf,
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-27" style="background:;">
+<slide class="" id="slide-28" style="background:;">
+  <hgroup>
+    <h2>Example 3: Minimum Expected Shortfall with Risk Budget Limit</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Consider an allocation to equity sectors using 9 sector ETFs. </p>
+
+<ul>
+<li>Raw returns data and sample moment estimates</li>
+<li>Cleaned returns data and factor model moment estimates</li>
+</ul>
+
+<!--
+We are doing everything wrong in the first case
+number of parameters estimated for each moment
+
+Data of the Select Sector SPDR ETFs
+Daily returns from 1999-01-05 to 2015-05-22 using the adjusted close prices
+-->
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
   <hgroup>
     <h2>Example 3: Data and Portfolio</h2>
   </hgroup>
   <article data-timings="">
     <pre><code class="r"># Data
-R &lt;- edhec[,1:10]
+R.raw &lt;- ret.sector
+R &lt;- Return.clean(R.raw, &quot;boudt&quot;)
 funds &lt;- colnames(R)
 
-# Construct portfolio
+# Construct initial portfolio with basic constraints.
 ES.portf &lt;- portfolio.spec(assets=funds)
 ES.portf &lt;- add.constraint(portfolio=ES.portf, type=&quot;weight_sum&quot;,
-                             min_sum=0.99, max_sum=1.01)
+                           min_sum=0.99, max_sum=1.01)
 ES.portf &lt;- add.constraint(portfolio=ES.portf, type=&quot;long_only&quot;)
 ES.portf &lt;- add.objective(portfolio=ES.portf, type=&quot;risk&quot;, name=&quot;ES&quot;,
-                            arguments=list(p=0.9, clean=&quot;boudt&quot;))
+                          arguments=list(p=0.95))
 ES.portf &lt;- add.objective(portfolio=ES.portf, type=&quot;risk_budget&quot;, 
-                            name=&quot;ES&quot;, max_prisk=0.25, 
-                            arguments=list(p=0.9, clean=&quot;boudt&quot;))
-
+                          name=&quot;ES&quot;, max_prisk=0.25, 
+                          arguments=list(p=0.95))
 # Generate random portfolios
 rp &lt;- random_portfolios(ES.portf, 5000)
 </code></pre>
@@ -998,7 +1103,7 @@ rp &lt;- random_portfolios(ES.portf, 5000)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-28" style="background:;">
+<slide class="" id="slide-30" style="background:;">
   <hgroup>
     <h2>Example 3: Fit Statistical Factor Model</h2>
   </hgroup>
@@ -1017,7 +1122,7 @@ m4 &lt;- extractCokurtosis(fit)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-29" style="background:;">
+<slide class="" id="slide-31" style="background:;">
   <hgroup>
     <h2>Example 3: Custom Moment Function</h2>
   </hgroup>
@@ -1039,33 +1144,32 @@ m4 &lt;- extractCokurtosis(fit)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-30" style="background:;">
+<slide class="" id="slide-32" style="background:;">
   <hgroup>
     <h2>Example 3: Optimization with Periodic Rebalancing</h2>
   </hgroup>
   <article data-timings="">
     <pre><code class="r"># Higher moment estimates from statistical factor model
 minES.boudt &lt;- optimize.portfolio.rebalancing(R=R, portfolio=ES.portf, 
-                                              momentFUN=fm.moments, 
-                                              k=3, clean=&quot;boudt&quot;,
-                                              optimize_method=&quot;random&quot;, rp=rp,
-                                              rebalance_on=&quot;quarters&quot;,
-                                              training_period=60,
-                                              trace=TRUE)
+                                                momentFUN=fm.moments, k=3,
+                                                optimize_method=&quot;random&quot;, rp=rp,
+                                                rebalance_on=&quot;quarters&quot;,
+                                                training_period=1250,
+                                                trace=TRUE)
 
 # Sample estimates of the moments
-minES.sample &lt;- optimize.portfolio.rebalancing(R=R, portfolio=ES.portf, 
-                                               optimize_method=&quot;random&quot;, rp=rp,
-                                               rebalance_on=&quot;quarters&quot;,
-                                               training_period=60,
-                                               trace=TRUE)
+minES.sample &lt;- optimize.portfolio.rebalancing(R=R.raw, portfolio=ES.portf, 
+                                                 optimize_method=&quot;random&quot;, rp=rp,
+                                                 rebalance_on=&quot;quarters&quot;,
+                                                 training_period=1250,
+                                                 trace=TRUE)
 </code></pre>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-31" style="background:;">
+<slide class="" id="slide-33" style="background:;">
   <hgroup>
     <h2>Example 3: Optimization Results</h2>
   </hgroup>
@@ -1076,7 +1180,7 @@ minES.sample &lt;- optimize.portfolio.rebalancing(R=R, portfolio=ES.portf,
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-32" style="background:;">
+<slide class="" id="slide-34" style="background:;">
   <hgroup>
     <h2>Conclusion</h2>
   </hgroup>
@@ -1124,7 +1228,7 @@ I hope they learned something and are motivated to use PortfolioAnalytics
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-33" style="background:;">
+<slide class="" id="slide-35" style="background:;">
   <hgroup>
     <h2>PortfolioAnalytics Links</h2>
   </hgroup>
@@ -1157,7 +1261,7 @@ I hope they learned something and are motivated to use PortfolioAnalytics
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-34" style="background:;">
+<slide class="" id="slide-36" style="background:;">
   <hgroup>
     <h2>Any Questions?</h2>
   </hgroup>
@@ -1167,7 +1271,7 @@ I hope they learned something and are motivated to use PortfolioAnalytics
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-35" style="background:;">
+<slide class="" id="slide-37" style="background:;">
   <hgroup>
     <h2>References and Useful Links</h2>
   </hgroup>
@@ -1309,98 +1413,110 @@ I hope they learned something and are motivated to use PortfolioAnalytics
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=20 title='Example 1: Data and Portfolio'>
+        data-slide=20 title='Example 1 and 2'>
          20
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=21 title='Example 1: Express Views'>
+        data-slide=21 title='Example 1: Data and Portfolio'>
          21
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=22 title='Example 1: Optimization'>
+        data-slide=22 title='Example 1: Express Views'>
          22
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=23 title='Example 1: Optimization Results'>
+        data-slide=23 title='Example 1: Optimization'>
          23
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=24 title='Example 2: Custom Moment Function'>
+        data-slide=24 title='Example 1: Optimization Results Optimal Weights'>
          24
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=25 title='Example 2: Optimization with Periodic Rebalancing'>
+        data-slide=25 title='Example 2: Custom Moment Function'>
          25
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=26 title='Example 2: Optimization Results'>
+        data-slide=26 title='Example 2: Optimization with Periodic Rebalancing'>
          26
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=27 title='Example 3: Data and Portfolio'>
+        data-slide=27 title='Example 2: Optimization Results'>
          27
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=28 title='Example 3: Fit Statistical Factor Model'>
+        data-slide=28 title='Example 3: Minimum Expected Shortfall with Risk Budget Limit'>
          28
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=29 title='Example 3: Custom Moment Function'>
+        data-slide=29 title='Example 3: Data and Portfolio'>
          29
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=30 title='Example 3: Optimization with Periodic Rebalancing'>
+        data-slide=30 title='Example 3: Fit Statistical Factor Model'>
          30
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=31 title='Example 3: Optimization Results'>
+        data-slide=31 title='Example 3: Custom Moment Function'>
          31
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=32 title='Conclusion'>
+        data-slide=32 title='Example 3: Optimization with Periodic Rebalancing'>
          32
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=33 title='PortfolioAnalytics Links'>
+        data-slide=33 title='Example 3: Optimization Results'>
          33
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=34 title='Any Questions?'>
+        data-slide=34 title='Conclusion'>
          34
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=35 title='References and Useful Links'>
+        data-slide=35 title='PortfolioAnalytics Links'>
          35
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=36 title='Any Questions?'>
+         36
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=37 title='References and Useful Links'>
+         37
       </a>
     </li>
   </ul>

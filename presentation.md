@@ -132,6 +132,14 @@ Highlight a few things about each point
 ## Multilayer Optimization
 ![](mult_portf.png)
 
+<!--
+explanation of how the multilayer optimization works
+start with portfolio of subportfolios
+the subportfolios could be countris, sectors, etc.
+optimize subportfolios
+this gives us 'n' synthetic return streams for 'n' sub portfolios
+we then optimize the top level portfolio using the 'n' synthetic return streams
+-->
 
 ---
 
@@ -177,10 +185,6 @@ PortfolioAnalytics has three methods to generate random portfolios.
 
 ## Comparison of Random Portfolio Methods (Interactive!)
 
-RP
-
-<!--
-
 ```
 Warning: cannot open compressed file 'figures/rp_viz.rda', probable reason
 'No such file or directory'
@@ -194,17 +198,21 @@ Error: cannot open the connection
 Error: object 'rp_viz' not found
 ```
 
-The feasible space is computed using the EDHEC data for a long only portfolio with a search size of 2000.
+<!--
+The feasible space is computed using the the first 5 assets of the EDHEC data
+for a long only portfolio with a search size of 2000.
 -->
 
 ---
 
 ## Random Portfolios: Simplex Method
-
-RP Simplex
+![](figures/fev_plot.png)
 
 <!--
-FEV (Face-Edge-Vertex bias values control how concentrated a portfolio is. This can clearly be seen in the plot. As FEV approaches infinity, the portfolio weight will be concentrated on a single asset. PortfolioAnalytics allows you to specify a vector of fev values for comprehensive coverage of the feasible space. 
+FEV (Face-Edge-Vertex bias values control how concentrated a portfolio is. This
+can clearly be seen in the plot. As FEV approaches infinity, the portfolio
+weight will be concentrated on a single asset. PortfolioAnalytics allows you to
+specify a vector of fev values for comprehensive coverage of the feasible space. 
 -->
 
 ---
@@ -221,10 +229,16 @@ args(portfolio.spec)
 ## NULL
 ```
 
-Initializes the portfolio object that holds portfolio level data, constraints, and objectives
+Initializes the portfolio object that holds portfolio level data, constraints,
+and objectives
 
 <!--
-The portfolio object is an S3 object that holds portfolio-level data, constraints, and objectives. The portfolio-level data includes asset names and initial weights, labels to categorize assets, and a sequence of weights for random portfolios. The main argument is assets which can be a character vector (most common use), named numeric vector, or scalar value specifying number of assets.
+The portfolio object is an S3 object that holds portfolio-level data,
+constraints, and objectives. The portfolio-level data includes asset names and
+initial weights, labels to categorize assets, and a sequence of weights for
+random portfolios. The main argument is assets which can be a character vector
+(most common use), named numeric vector, or scalar value specifying number of
+assets.
 -->
 
 ---
@@ -251,7 +265,12 @@ Supported Constraint Types
 * and many more
 
 <!--
-This adds a constraint object to the portfolio object. Constraints are added to the portfolio object with the add.constraint function. Each constraint added is a separate object and stored in the constraints slot in the portfolio object. In this way, the constraints are modular and one can easily add, remove, or modify the constraints in the portfolio object. Main argument is the type, arguments to the constraint constructor are then passed through the dots (...).
+This adds a constraint object to the portfolio object. Constraints are added to
+the portfolio object with the add.constraint function. Each constraint added is
+a separate object and stored in the constraints slot in the portfolio object.
+In this way, the constraints are modular and one can easily add, remove, or
+modify the constraints in the portfolio object. Main argument is the type,
+arguments to the constraint constructor are then passed through the dots (...).
 -->
 
 ---
@@ -276,7 +295,12 @@ Supported Objective types
 * Weight Concentration
 
 <!--
-Objectives are added to the portfolio object with the add.objective function. Each objective added is a separate object and stored in the objectives slot in the portfolio object. In this way, the objectives are modular and one can easily add, remove, or modify the objective objects. The name argument must be a valid R function. Several functions are available in the PerformanceAnalytics package, but custom user defined functions can be used as objective functions.
+Objectives are added to the portfolio object with the add.objective function.
+Each objective added is a separate object and stored in the objectives slot in
+the portfolio object. In this way, the objectives are modular and one can easily
+add, remove, or modify the objective objects. The name argument must be a valid
+R function. Several functions are available in the PerformanceAnalytics package,
+but custom user defined functions can be used as objective functions.
 -->
 
 ---
@@ -308,11 +332,17 @@ args(optimize.portfolio.rebalancing)
 ```
 
 <!--
-* Notice the similarity between these two functions. You only have to specify a few additional arguments for the backtesting.
+* Notice the similarity between these two functions. You only have to specify a
+few additional arguments for the backtesting.
 
-* optimize.portfolio: Main arguments for a single period optimization are the returns (R), portfolio, and optimize_method. We take the portfolio object and parse the constraints and objectives according to the optimization method.
+* optimize.portfolio: Main arguments for a single period optimization are the
+returns (R), portfolio, and optimize_method. We take the portfolio object and
+parse the constraints and objectives according to the optimization method.
 
-* optimize.portfolio.rebalancing: Supports periodic rebalancing (backtesting) to examine out of sample performance. Helps refine constraints and objectives by analyzing out or sample performance. Essentially a wrapper around optimize.portfolio that handles the time interface.
+* optimize.portfolio.rebalancing: Supports periodic rebalancing (backtesting) to
+examine out of sample performance. Helps refine constraints and objectives by
+analyzing out or sample performance. Essentially a wrapper around
+optimize.portfolio that handles the time interface.
 -->
 
 ---
@@ -400,7 +430,8 @@ Quadratic Utility
   * expected returns vector
   * covariance matrix
 
-Fourth order expansion of the Constant Relative Risk Aversion (CRRA) Utility Function
+Fourth order expansion of the Constant Relative Risk Aversion (CRRA) 
+Utility Function
 Martellini and Ziemann (2010) and Boudt et al (2014)
   * expected returns vector (assume zero mean and omit)
   * covariance matrix
@@ -560,13 +591,13 @@ pooling parameter c in [0,1] represents the confidence levels in the views
 
 ## Almgren-Chriss Portfolios from Sorts
 
-* Define $ S_1, ... , S_n $ as the investment universe of $ n $ assets
+* Define $ S_1, S_2, ... , S_n $ as the investment universe of $ n $ assets
 
 * Defining Sorts
   * Single complete sort
   $$ r_1 \geq r_2 \geq ... \geq r_n $$
   * Sector based sort
-  * Deciles and Other Divisions
+  * Deciles and other divisions
   * Single complete sort with longs and shorts
   * others
 
@@ -618,31 +649,58 @@ monte carlo estimate for other estimates
 
 ---
 
-## Example
+## Example 1 and 2
+Consider an allocation to hedge funds using the EDHEC-Risk Alternative Index as
+a proxy. 
+* Simple example of expressing a view on the order of the expected
+returns of assets using both Meucci's Fully Flexible Views and the 
+Almgren-Chriss framework
+* Establish a quantitative rule for our view on the order of the expected
+returns of assets and test on historical data.
+
+
+
+<!--
+EDHEC-Risk Alternative Index is not investable, but offers a good proxy for
+hedge fund style returns. EDHEC data is from 1997-01-31 to 2015-03-31
+
+First example is very simple to demonstrate how this can be done in 
+PortfolioAnalytics to understand the framework. Start with a case of expressing
+a view on the order of the expected returns of assets.
+
+Then examine a more complex problem in which we wish to establish a quantitative
+rule for our view on the order of the expected returns of assets and test on
+historical data to evaluate out of sample performance. Custom moment function
+and periodic rebalancing.
+-->
+
+---
+
+## Example 1: Data and Portfolio
 
 ```r
-# Load package and data.
+# Load package and data
 library(PortfolioAnalytics)
-data(edhec)
+source("data_prep.R")
 R <- edhec[,1:4]
 funds <- colnames(R)
 
-# Construct initial portfolio with basic constraints.
-init.portf <- portfolio.spec(assets=funds)
-init.portf <- add.constraint(portfolio=init.portf, type="weight_sum", 
-                             min_sum=0.99, max_sum=1.01)
-init.portf <- add.constraint(portfolio=init.portf, type="box",
-                             min=0.05, max=0.5)
-init.portf <- add.objective(portfolio=init.portf, type="risk", name="StdDev")
-init.portf <- add.objective(portfolio=init.portf, type="return", name="mean")
+# Construct portfolio
+meanSD.portf <- portfolio.spec(assets=funds)
+meanSD.portf <- add.constraint(portfolio=meanSD.portf, type="weight_sum",
+                               min_sum=0.99, max_sum=1.01)
+meanSD.portf <- add.constraint(portfolio=meanSD.portf, type="box",
+                               min=0.05, max=0.5)
+meanSD.portf <- add.objective(portfolio=meanSD.portf, type="risk", name="StdDev")
+meanSD.portf <- add.objective(portfolio=meanSD.portf, type="return", name="mean")
 
 # Generate random portfolios for use in the optimization.
-rp <- random_portfolios(init.portf, 5000)
+rp <- random_portfolios(meanSD.portf, 5000)
 ```
 
 ---
 
-## Example
+## Example 1: Express Views
 
 ```r
 # Here we express views on the relative rank of the asset returns
@@ -670,10 +728,8 @@ ac.moments$sigma <- cov(R)
 meucci.ranking does the entropy minimization and computes the first and second
 moments given the market data and posterior probability.
 
-EntropyProg does the entropy minimization and returns the posterior probabilities
-
-meucci.moments computes the first and second moments given the market data and
-posterior probability
+EntropyProg does the entropy minimization and returns the posterior
+probabilities
 
 ac.ranking computes the estimated centroid vector from a single complete sort
 using the analytical approximation as described in R. Almgren and N. Chriss,
@@ -685,36 +741,38 @@ scaled according to the median of the asset mean returns.
 
 ---
 
-## Example Optimization
+## Example 1: Optimization
 
 
 ```r
 # Use moments output from meucci.ranking
-opt.meucci <- optimize.portfolio(R, 
-                                 init.portf, 
-                                 optimize_method="random", 
-                                 rp=rp, 
+opt.meucci <- optimize.portfolio(R, portfolio=meanSD.portf,
+                                 optimize_method="random",
+                                 rp=rp,
                                  trace=TRUE,
                                  momentargs=m.moments)
 
 # Use first moment from ac.ranking. Note second moment is sample covariance
-opt.ac <- optimize.portfolio(R, 
-                             init.portf, 
-                             optimize_method="random", 
-                             rp=rp, 
+opt.ac <- optimize.portfolio(R, portfolio=meanSD.portf,
+                             optimize_method="random",
+                             rp=rp,
                              trace=TRUE,
                              momentargs=ac.moments)
 ```
 
+<!--
+single period optimization
+note the objects passed to momentargs
+-->
 
 ---
 
-## Optimization Results
-TODO: Insert image for optimal weights
+## Example 1: Optimization Results Optimal Weights
+![](figures/weights_ex1.png)
 
 ---
 
-## Custom Moment Function
+## Example 2: Custom Moment Function
 
 ```r
 moment.ranking <- function(R, n=1, method=c("meucci", "ac")){
@@ -736,35 +794,139 @@ moment.ranking <- function(R, n=1, method=c("meucci", "ac")){
 }
 ```
 
+<!--
+meucci.moments computes the first and second moments given the market data and
+posterior probability
+-->
+
 ---
 
-## Optimization with Periodic Rebalancing
+## Example 2: Optimization with Periodic Rebalancing
 
 
 ```r
-opt.bt.meucci <- optimize.portfolio.rebalancing(R, init.portf, 
-                                                optimize_method="random", 
-                                                rebalance_on="quarters", 
-                                                training_period=100,
-                                                rp=rp,
+opt.bt.meucci <- optimize.portfolio.rebalancing(R, portfolio=meanSD.portf,
+                                                optimize_method="random", rp=rp,
+                                                rebalance_on="quarters",
+                                                training_period=72,
                                                 momentFUN="moment.ranking",
-                                                n=3,
-                                                method="meucci")
+                                                n=3, method="meucci")
 
-opt.bt.ac <- optimize.portfolio.rebalancing(R, init.portf, 
-                                            optimize_method="random", 
-                                            rebalance_on="quarters", 
-                                            training_period=100,
-                                            rp=rp,
+opt.bt.ac <- optimize.portfolio.rebalancing(R, portfolio=meanSD.portf,
+                                            optimize_method="random", rp=rp,
+                                            rebalance_on="quarters",
+                                            training_period=72,
                                             momentFUN="moment.ranking",
-                                            n=3,
-                                            method="ac")
+                                            n=3, method="ac")
+```
+
+<!--
+note the custom moment function and the momentFUN args passed in
+-->
+
+---
+
+## Example 2: Optimization Results
+![](figures/ret_ex2.png)
+
+---
+
+## Example 3: Minimum Expected Shortfall with Risk Budget Limit
+Consider an allocation to equity sectors using 9 sector ETFs. 
+* Raw returns data and sample moment estimates
+* Cleaned returns data and factor model moment estimates
+
+<!--
+We are doing everything wrong in the first case
+number of parameters estimated for each moment
+
+Data of the Select Sector SPDR ETFs
+Daily returns from 1999-01-05 to 2015-05-22 using the adjusted close prices
+-->
+
+---
+
+## Example 3: Data and Portfolio
+
+```r
+# Data
+R.raw <- ret.sector
+R <- Return.clean(R.raw, "boudt")
+funds <- colnames(R)
+
+# Construct initial portfolio with basic constraints.
+ES.portf <- portfolio.spec(assets=funds)
+ES.portf <- add.constraint(portfolio=ES.portf, type="weight_sum",
+                           min_sum=0.99, max_sum=1.01)
+ES.portf <- add.constraint(portfolio=ES.portf, type="long_only")
+ES.portf <- add.objective(portfolio=ES.portf, type="risk", name="ES",
+                          arguments=list(p=0.95))
+ES.portf <- add.objective(portfolio=ES.portf, type="risk_budget", 
+                          name="ES", max_prisk=0.25, 
+                          arguments=list(p=0.95))
+# Generate random portfolios
+rp <- random_portfolios(ES.portf, 5000)
+```
+
+
+---
+
+## Example 3: Fit Statistical Factor Model
+
+```r
+# This is not necessary for the optimization, but demonstrates how to extract
+# the moments for use in custom objective function
+fit <- statistical.factor.model(R, k=3)
+
+# Extract the moments
+sigma <- extractCovariance(fit)
+m3 <- extractCoskewness(fit)
+m4 <- extractCokurtosis(fit)
 ```
 
 ---
 
-## Optimization Results
-TODO: Insert performance summary chart and table of annualized returns
+## Example 3: Custom Moment Function
+
+```r
+fm.moments <- function(R, k=1, clean="boudt"){
+  R <- Return.clean(R, method=clean[1])
+  fit <- statistical.factor.model(R=R, k=k)
+  momentargs <- list()
+  momentargs$mu <- matrix(as.vector(apply(R,2,'mean')),ncol=1)
+  # momentargs$mu <- matrix(rep(0, ncol(R)),ncol=1)
+  momentargs$sigma <- extractCovariance(fit)
+  momentargs$m3 <- extractCoskewness(fit)
+  momentargs$m4 <- extractCokurtosis(fit)
+  return(momentargs)
+}
+```
+
+---
+
+## Example 3: Optimization with Periodic Rebalancing
+
+```r
+# Higher moment estimates from statistical factor model
+minES.boudt <- optimize.portfolio.rebalancing(R=R, portfolio=ES.portf, 
+                                                momentFUN=fm.moments, k=3,
+                                                optimize_method="random", rp=rp,
+                                                rebalance_on="quarters",
+                                                training_period=1250,
+                                                trace=TRUE)
+
+# Sample estimates of the moments
+minES.sample <- optimize.portfolio.rebalancing(R=R.raw, portfolio=ES.portf, 
+                                                 optimize_method="random", rp=rp,
+                                                 rebalance_on="quarters",
+                                                 training_period=1250,
+                                                 trace=TRUE)
+```
+
+---
+
+## Example 3: Optimization Results
+![](figures/ret_ex3.png)
 
 
 ---
@@ -787,10 +949,16 @@ Many thanks to...
 * R/Finance Committee
 
 <!---
-- One of the best things about GSoC is the opportunity to work and interact with the mentors.
-- Thank the GSoC mentors for offering help and guidance during the GSoC project and after as I continued to work on the PortfolioAnalytics package.
-- R/Finance Committee for the conference and the opportunity to talk about PortfolioAnalytics.
-- Google for funding the Google Summer of Code for PortfolioAnalytics and many other proposals for R
+Hammer home the point of modular architecture and ability to "plug" custom
+moments and objective functions to define your own optimization problems
+- One of the best things about GSoC is the opportunity to work and interact
+with the mentors.
+- Thank the GSoC mentors for offering help and guidance during the GSoC project
+and after as I continued to work on the PortfolioAnalytics package.
+- R/Finance Committee for the conference and the opportunity to talk about
+PortfolioAnalytics.
+- Google for funding the Google Summer of Code for PortfolioAnalytics and many
+other proposals for R
 
 Thank everyone for attending
 I hope they learned something and are motivated to use PortfolioAnalytics
@@ -830,6 +998,6 @@ and view it here
 * [PerformanceAnalytics](http://cran.r-project.org/web/packages/PerformanceAnalytics/index.html)
 * [Patrick Burns Random Portfolios](http://www.burns-stat.com/pages/Finance/randport_practice_theory_annotated.pdf)
 * [W.T. Shaw Random Portfolios](http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1856476)
-* Martellini paper
-* Boudt paper
+* [Improved Forecasts of Higher-Order Co-moments and Implications for Portfolio Selection](http://docs.edhec-risk.com/EAID-2008-Doc/documents/Higher_Order_Comoments.pdf)
+* [Higher Order Comoments of Multifactor Models and Asset Allocation](http://papers.ssrn.com/sol3/papers.cfm?abstract_id=2409603)
 * [Shiny App](http://spark.rstudio.com/rossbennett3/PortfolioOptimization/)
