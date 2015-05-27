@@ -1,5 +1,5 @@
 ---
-title       : PortfolioAnalytics
+title       : Advanced Moment Estimation & Optimization with PortfolioAnalytics
 subtitle    : R/Finance 2015
 author      : Ross Bennett
 date        : May 29, 2015
@@ -76,8 +76,8 @@ Several approaches follow the Markowitz approach using mean return as a measure 
 PortfolioAnalytics is an R package designed to provide numerical solutions and visualizations for portfolio optimization problems with complex constraints and objectives.
 
 * Support for multiple constraint and objective types
-* An objective function can be any valid R function
 * Modular constraints and objectives
+* An objective function can be any valid R function
 * Support for user defined moment functions
 * Visualizations
 * Solver agnostic
@@ -832,12 +832,11 @@ m4 <- extractCokurtosis(fit)
 
 ## Example 3: Custom Moment Function
 ```{r eval=FALSE}
-fm.moments <- function(R, k=1, clean="boudt"){
+fm.moments <- function(R, k=1){
   R <- Return.clean(R, method=clean[1])
   fit <- statistical.factor.model(R=R, k=k)
   momentargs <- list()
-  momentargs$mu <- matrix(as.vector(apply(R,2,'mean')),ncol=1)
-  # momentargs$mu <- matrix(rep(0, ncol(R)),ncol=1)
+  momentargs$mu <- matrix(rep(0, ncol(R)),ncol=1)
   momentargs$sigma <- extractCovariance(fit)
   momentargs$m3 <- extractCoskewness(fit)
   momentargs$m4 <- extractCokurtosis(fit)
@@ -910,13 +909,10 @@ I hope they learned something and are motivated to use PortfolioAnalytics
 ---
 
 ## PortfolioAnalytics Links
-PortfolioAnalytics on CRAN
 
-* [PortfolioAnalytics](http://cran.at.r-project.org/web/packages/PortfolioAnalytics/index.html)
+* [PortfolioAnalytics on CRAN](http://cran.at.r-project.org/web/packages/PortfolioAnalytics/index.html)
 
-PortfolioAnalytics development on R-Forge in the ReturnAnalytics project
-
-* [PortfolioAnalytics](https://r-forge.r-project.org/projects/returnanalytics/)
+* [PortfolioAnalytics on R-Forge](https://r-forge.r-project.org/projects/returnanalytics/)
 
 Source code for the slides
 
