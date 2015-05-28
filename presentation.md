@@ -35787,7 +35787,6 @@ m4 <- extractCokurtosis(fit)
 
 ```r
 fm.moments <- function(R, k=1){
-  R <- Return.clean(R, method=clean[1])
   fit <- statistical.factor.model(R=R, k=k)
   momentargs <- list()
   momentargs$mu <- matrix(rep(0, ncol(R)),ncol=1)
@@ -35839,7 +35838,7 @@ minES.sample <- optimize.portfolio.rebalancing(R=R.raw, portfolio=ES.portf,
 #### Acknowledgements
 Many thanks to...
 
-* Google: funding Google Summer of Code (GSoC) for 2014 and 2015
+* Google: funding Google Summer of Code (GSoC) for 2013 and 2014
 * UW CF&RM Program: continued work on PortfolioAnalytics
 * GSoC Mentors: Brian Peterson, Peter Carl, Doug Martin, and Guy Yollin
 * R/Finance Committee

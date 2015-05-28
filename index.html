@@ -36029,7 +36029,6 @@ m4 &lt;- extractCokurtosis(fit)
   </hgroup>
   <article data-timings="">
     <pre><code class="r">fm.moments &lt;- function(R, k=1){
-  R &lt;- Return.clean(R, method=clean[1])
   fit &lt;- statistical.factor.model(R=R, k=k)
   momentargs &lt;- list()
   momentargs$mu &lt;- matrix(rep(0, ncol(R)),ncol=1)
@@ -36102,7 +36101,7 @@ minES.sample &lt;- optimize.portfolio.rebalancing(R=R.raw, portfolio=ES.portf,
 <p>Many thanks to...</p>
 
 <ul>
-<li>Google: funding Google Summer of Code (GSoC) for 2014 and 2015</li>
+<li>Google: funding Google Summer of Code (GSoC) for 2013 and 2014</li>
 <li>UW CF&amp;RM Program: continued work on PortfolioAnalytics</li>
 <li>GSoC Mentors: Brian Peterson, Peter Carl, Doug Martin, and Guy Yollin</li>
 <li>R/Finance Committee</li>
